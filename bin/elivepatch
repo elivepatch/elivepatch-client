@@ -1,1 +1,9 @@
-# here goes the client
+#!/usr/bin/env python
+
+from ..kernel.check import KernelCheck
+from ..cve.check import CveCheck
+
+KernelCheck()
+CveCheck()
+
+
