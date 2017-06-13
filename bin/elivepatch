@@ -28,5 +28,5 @@ from   elivepatch_client.client     import checkers
 #
 #-------------------------------------------------------------------------------
 
-Kernel = checkers.KernelCheck()
-Kernel.version()
+Kernel = checkers.Kernel()
+Kernel.get_version()
