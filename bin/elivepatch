@@ -1,9 +1,32 @@
 #!/usr/bin/env python
+################################################################################
+# elivepatch - A UTILITY FOR LIVE PATCHING GENTOO KERNELS
+################################################################################
+# Distributed under the terms of the GNU General Public License v2
+#
+# Copyright:
+#             (c) 2017 Alice Ferrazzi
+#             Distributed under the terms of the GNU General Public License v2
+#
+# Author(s):
+#             Alice Ferrazzi <alicef@gentoo.org>
+#
 
-from elivepatch_client.kernel.check import KernelCheck
-from elivepatch_client.cve.check import CveCheck
+__version__ = "0.0.1"
 
-KernelCheck.version()
-CveCheck()
+#===============================================================================
+#
+# Dependencies
+#
+#-------------------------------------------------------------------------------
 
+from   elivepatch_client.client     import checkers
 
+#===============================================================================
+#
+# MAIN
+#
+#-------------------------------------------------------------------------------
+
+Kernel = checkers.KernelCheck()
+Kernel.version()
