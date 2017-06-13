@@ -3,7 +3,7 @@
 from ..kernel.check import KernelCheck
 from ..cve.check import CveCheck
 
-KernelCheck()
+KernelCheck.version()
 CveCheck()
 
 
