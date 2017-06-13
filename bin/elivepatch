@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
-from ..kernel.check import KernelCheck
-from ..cve.check import CveCheck
+from elivepatch_client.kernel.check import KernelCheck
+from elivepatch_client.cve.check import CveCheck
 
 KernelCheck.version()
 CveCheck()
