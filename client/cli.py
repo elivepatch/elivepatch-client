@@ -16,10 +16,7 @@
 #
 
 from __future__ import unicode_literals
-
-__version__ = "$Id: cli.py 2011-01-15 23:52 PST Brian Dolbec$"
-
-
+from elivepatch_client.client import argsparser
 import os, sys
 
 if sys.hexversion >= 0x30200f0:
@@ -36,9 +33,6 @@ class Main(object):
         self.config = config
 
 
+
     def __call__(self):
         pass
-        #if -1 in results:
-        #    sys.exit(FAILURE)
-        #else:
-        #    sys.exit(SUCCEED)
