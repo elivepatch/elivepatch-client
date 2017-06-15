@@ -20,7 +20,9 @@ __version__ = "0.0.1"
 #
 #-------------------------------------------------------------------------------
 
-from   elivepatch_client.client     import checkers
+from   elivepatch_client.client.argsparser     import ArgsParser
+from   elivepatch_client.client.cli     import Main
+import os
 
 #===============================================================================
 #
@@ -28,9 +30,21 @@ from   elivepatch_client.client     import checkers
 #
 #-------------------------------------------------------------------------------
 
-Kernel = checkers.Kernel()
-Kernel.get_version()
-cve = checkers.CVE()
-cve.repo_dir = "/home/alicef/IdeaProjects/test12345"
-cve.git_url = "https://github.com/nluedtke/linux_kernel_cves"
-cve.download()
+# Kernel = checkers.Kernel()
+# Kernel.get_version()
+# cve = checkers.CVE()
+# cve.repo_dir = "/home/alicef/IdeaProjects/test12345"
+# cve.git_url = "https://github.com/nluedtke/linux_kernel_cves"
+# cve.download()
+
+root = None
+try:
+    root = os.environ['ROOT']
+except KeyError:
+    pass
+
+main = Main(ArgsParser())
+try:
+    main()
+except KeyboardInterrupt:
+    print('Interrupt received, exiting...')
