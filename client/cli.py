@@ -27,8 +27,9 @@ class Main(object):
     """Performs the actions the user selected.
     """
 
-    def __init__(self, arg):
-        print(arg.get_arg())
+    def __init__(self, argparser):
+        config = argparser.get_arg()
+        print(config)
 
     def __call__(self):
         pass

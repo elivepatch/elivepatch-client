@@ -17,7 +17,7 @@ class ArgsParser(object):
                                  help="Specify config file", metavar="FILE")
         args, remaining_argv = conf_parser.parse_known_args()
         defaults = {
-            "default1" : "foo",
+            "config" : "/proc/config.gz",
         }
         if args.conf_file:
             config = ConfigParser.SafeConfigParser()
