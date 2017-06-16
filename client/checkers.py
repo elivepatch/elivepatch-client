@@ -17,7 +17,7 @@ class Kernel():
         self.minor = tmp[1]
         tmp[2] = tmp[2].split("-")
         self.revision = tmp[2][0]
-        pass
+        return self.major, self.minor, self.revision
 
 
 class CVE():
