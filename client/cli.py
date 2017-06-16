@@ -16,7 +16,6 @@
 #
 
 from __future__ import unicode_literals
-from elivepatch_client.client import argsparser
 import os, sys
 
 if sys.hexversion >= 0x30200f0:
@@ -31,6 +30,7 @@ class Main(object):
 
     def __init__(self, config):
         self.config = config
+        print(config)
 
 
 

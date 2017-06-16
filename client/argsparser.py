@@ -15,13 +15,14 @@ class ArgsParser():
         @click.option('-v', '--verbose', count=True, help='set the verbose option.')
         @click.version_option(version=VERSION)
 
-        def saas(cve, patch, kernel, debug, verbose):
-            print("cve", cve)
-            print("patch", patch)
-            print("kernel",kernel)
-            print("debug", debug)
 
-            pass
+        def arguments(cve, patch, kernel, debug, verbose):
+            self.cve = cve
+            self.patch = patch
+            self.kernel = kernel
+            self.debug = debug
+            self.verbose = verbose
+        arguments()
 
-        saas()
+
 
