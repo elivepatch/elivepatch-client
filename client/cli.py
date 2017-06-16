@@ -16,6 +16,7 @@
 #
 
 import os, sys
+from elivepatch_client.client.checkers import CVE
 
 if sys.hexversion >= 0x30200f0:
     ALL_KEYWORD = b'ALL'
@@ -30,6 +31,10 @@ class Main(object):
     def __init__(self, argparser):
         config = argparser.get_arg()
         print(config)
+        #cve = CVE()
+        #cve.download()
+        # Kernel = checkers.Kernel()
+        # Kernel.get_version()
 
     def __call__(self):
         pass

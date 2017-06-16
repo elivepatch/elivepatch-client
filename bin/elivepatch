@@ -29,13 +29,6 @@ import os
 #
 #-------------------------------------------------------------------------------
 
-# Kernel = checkers.Kernel()
-# Kernel.get_version()
-# cve = checkers.CVE()
-# cve.repo_dir = "/home/alicef/IdeaProjects/test12345"
-# cve.git_url = "https://github.com/nluedtke/linux_kernel_cves"
-# cve.download()
-
 root = None
 try:
     root = os.environ['ROOT']

@@ -23,8 +23,8 @@ class Kernel():
 class CVE():
 
     def __init__(self):
-        self.git_url = ""
-        self.repo_dir = ""
+        self.git_url = "https://github.com/nluedtke/linux_kernel_cves"
+        self.repo_dir = "/tmp/kernel_cve/"
         pass
 
     def download(self):
