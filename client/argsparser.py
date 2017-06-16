@@ -2,9 +2,10 @@
 # -*- coding: utf-8 -*-
 
 import argparse
-import ConfigParser
-from elivepatch_client.client.version import VERSION
-
+try:
+    import ConfigParser
+except:
+    import configparser as ConfigParser
 
 class ArgsParser(object):
 
