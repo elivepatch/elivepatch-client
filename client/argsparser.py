@@ -5,10 +5,10 @@ import click
 from elivepatch_client.client.version import VERSION
 
 
-class ArgsParser():
+class ArgsParser(object):
 
     def __init__(self):
-        self.arguments()
+        pass
 
     @click.command()
     @click.option('-c','--cve', default=False, help='Check for secutiry problems in the kernel.', is_flag=True)
@@ -19,5 +19,6 @@ class ArgsParser():
     @click.version_option(version=VERSION)
     def arguments(cve, patch, kernel, debug, verbose):
         print(cve)
-        return cve
+        test = ("test: "+str(cve))
+        return test
 
