@@ -35,7 +35,7 @@ class ArgsParser(object):
             formatter_class=argparse.RawDescriptionHelpFormatter,
         )
         parser.set_defaults(**defaults)
-        parser.add_argument("-e","--cve", help="Check for secutiry problems in the kernel.")
+        parser.add_argument("-e","--cve", action='store_true', help="Check for secutiry problems in the kernel.")
         parser.add_argument("-p","--patch", help="patch to convert.")
         parser.add_argument("-k","--config", help="set kernel config file manually.")
         parser.add_argument("-d","--debug", action='store_true', help="set the debug option.")
