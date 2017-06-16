@@ -19,7 +19,6 @@ __version__ = "0.0.1"
 # Dependencies
 #
 #-------------------------------------------------------------------------------
-
 from   elivepatch_client.client.argsparser     import ArgsParser
 from   elivepatch_client.client.cli     import Main
 import os

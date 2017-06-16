@@ -16,7 +16,6 @@
 #
 
 import os, sys
-from   elivepatch_client.client.argsparser     import ArgsParser
 
 if sys.hexversion >= 0x30200f0:
     ALL_KEYWORD = b'ALL'
@@ -28,8 +27,8 @@ class Main(object):
     """Performs the actions the user selected.
     """
 
-    def __init__(self):
-        print(ArgsParser().arguments())
+    def __init__(self, arg):
+        print(arg.get_arg())
 
     def __call__(self):
         pass
