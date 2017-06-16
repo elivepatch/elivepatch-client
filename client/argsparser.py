@@ -38,6 +38,7 @@ class ArgsParser(object):
         parser.add_argument("-e","--cve", action='store_true', help="Check for secutiry problems in the kernel.")
         parser.add_argument("-p","--patch", help="patch to convert.")
         parser.add_argument("-k","--config", help="set kernel config file manually.")
+        parser.add_argument("-u","--url", help="set elivepatch server url.")
         parser.add_argument("-d","--debug", action='store_true', help="set the debug option.")
         parser.add_argument("-v","--version", action='store_true', help="set the verbose option.")
         self.args = parser.parse_args(remaining_argv)
