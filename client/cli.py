@@ -42,6 +42,5 @@ class Main(object):
         pass
 
     def send_config(self):
-        ManaGer.server_url = ""
-
+        server = ManaGer(self.url)
         pass
