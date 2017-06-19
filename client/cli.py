@@ -19,6 +19,7 @@ import os, sys
 from elivepatch_client.client.checkers import CVE
 from elivepatch_client.client.checkers import Kernel
 from elivepatch_client.client.restful import ManaGer
+from elivepatch_client.client.version import VERSION
 
 
 if sys.hexversion >= 0x30200f0:
@@ -47,6 +48,9 @@ class Main(object):
             Kernel()
         elif config.patch:
             print('working with patch')
+            Kernel().get_version()
+        elif config.version:
+            print('elivepatch version: '+str(VERSION))
         else:
             print('--help for help\n\
 you need at list --patch or --cve')
