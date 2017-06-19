@@ -17,9 +17,9 @@ class ManaGer(object):
         print(r.text)
         print(r.json())
 
-    def send_config(self, config_path, config_file):
+    def send_config(self, send_file, name_file):
         url = self.server_url
         headers = {'elivepatch': 'password'}
-        files = {'file': (config_file, open(config_path, 'rb'), 'multipart/form-data', {'Expires': '0'})}
+        files = {'file': (name_file, open(send_file, 'rb'), 'multipart/form-data', {'Expires': '0'})}
         r = requests.post(url, files=files, headers=headers)
 

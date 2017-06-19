@@ -30,7 +30,7 @@ class Kernel(object):
         print (os.path.basename(self.config))
         path, file = (os.path.split(self.config))
         rest_manager = restful.ManaGer(url)
-        rest_manager.send_config(path, file)
+        rest_manager.send_config(self.config, 'config.txt')
         pass
 
 class CVE(object):
