@@ -1,14 +1,16 @@
 #!/usr/bin/env python
 import os
 from git import Repo
+from elivepatch_client.client import restful
 
 
-class Kernel():
+class Kernel(object):
 
     def __init__(self):
         self.minor = 0
         self.major = 0
         self.revision = 0
+        self.config = ''
         pass
 
     def get_version(self):
@@ -19,8 +21,19 @@ class Kernel():
         self.revision = tmp[2][0]
         return self.major, self.minor, self.revision
 
+    def get_config(self, config_path):
+        self.config = config_path
+        pass
 
-class CVE():
+    def send_config(self, url):
+        print(str(self.config)+ str(url))
+        print (os.path.basename(self.config))
+        path, file = (os.path.split(self.config))
+        rest_manager = restful.ManaGer(url)
+        rest_manager.send_config(path, file)
+        pass
+
+class CVE(object):
 
     def __init__(self):
         self.git_url = "https://github.com/nluedtke/linux_kernel_cves"

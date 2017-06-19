@@ -48,7 +48,10 @@ class Main(object):
             Kernel()
         elif config.patch:
             print('working with patch')
-            Kernel().get_version()
+            current_kernel = Kernel()
+            print(current_kernel.get_version())
+            current_kernel.get_config(config.config)
+            current_kernel.send_config(config.url)
         elif config.version:
             print('elivepatch version: '+str(VERSION))
         else:
