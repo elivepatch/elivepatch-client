@@ -41,19 +41,15 @@ class Main(object):
 
 
     def dispatch(self, config):
-        if config.config:
-            print('getting kernel config')
-            Kernel()
-        elif config.cve:
+        print(str(config))
+        if config.cve:
             print('working on cve')
-        elif config.url:
-            print('getting url')
-        elif config.debug:
-            print('debug mode on')
-        elif config.version:
-            print('returning version')
+            Kernel()
+        elif config.patch:
+            print('working with patch')
         else:
-            print('this is strange')
+            print('--help for help\n\
+you need at list --patch or --cve')
 
 
 
