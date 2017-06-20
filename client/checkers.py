@@ -35,7 +35,7 @@ class Kernel(object):
         file_extension = os.path.splitext(file)[1]
         if file_extension == ".gz":
             print('gz extension')
-            f_action =FileAction(path, file)
+            f_action = FileAction(path, file)
             path, file = f_action.ungz()
             # if the file is .gz the configuration path is the tmp folder uncompressed config file
             self.config = path +'/'+file
