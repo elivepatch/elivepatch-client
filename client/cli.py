@@ -35,11 +35,6 @@ class Main(object):
     def __init__(self, argparser):
         config = argparser.get_arg()
         self.dispatch(config)
-        # print(config)
-        # print(Kernel().get_version())
-        # self.url = config.url
-        # self.send_config()
-
 
     def dispatch(self, config):
         print(str(config))
@@ -49,7 +44,6 @@ class Main(object):
         elif config.patch:
             print('working with patch')
             current_kernel = Kernel()
-            print(current_kernel.get_version())
             current_kernel.get_config(config.config)
             current_kernel.send_config(config.url)
         elif config.version:

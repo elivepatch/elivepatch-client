@@ -21,6 +21,7 @@ __version__ = "0.0.1"
 #-------------------------------------------------------------------------------
 from   elivepatch_client.client.argsparser     import ArgsParser
 from   elivepatch_client.client.cli     import Main
+#import pdb; pdb.set_trace()
 import os
 
 #===============================================================================

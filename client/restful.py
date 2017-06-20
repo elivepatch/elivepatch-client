@@ -7,7 +7,6 @@ from requests.auth import HTTPBasicAuth
 class ManaGer(object):
     def __init__(self, server_url):
         self.server_url = server_url
-        self.version()
 
     def version(self):
         url = self.server_url + '/elivepatch/api/v1.0/agent'
@@ -18,7 +17,7 @@ class ManaGer(object):
         print(r.json())
 
     def send_config(self, send_file, name_file):
-        url = self.server_url
+        url = self.server_url+'/elivepatch/api/v1.0/config'
         headers = {'elivepatch': 'password'}
         files = {'file': (name_file, open(send_file, 'rb'), 'multipart/form-data', {'Expires': '0'})}
         r = requests.post(url, files=files, headers=headers)
