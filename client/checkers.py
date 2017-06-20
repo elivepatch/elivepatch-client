@@ -7,6 +7,7 @@ import glob
 import os
 import os.path
 
+
 class Kernel(object):
 
     def __init__(self):
@@ -43,6 +44,7 @@ class Kernel(object):
         # we are sending only uncompressed configuration files
         rest_manager.send_config(self.config, file)
         pass
+
 
 class CVE(object):
 
