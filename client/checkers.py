@@ -15,7 +15,7 @@ class Kernel(object):
         self.major = 0
         self.revision = 0
         self.config = ''
-        pass
+        self.patch = ''
 
     def get_version(self):
         tmp = os.uname()[2].split(".")
@@ -25,9 +25,11 @@ class Kernel(object):
         self.revision = tmp[2][0]
         return self.major, self.minor, self.revision
 
-    def get_config(self, config_path):
+    def set_config(self, config_path):
         self.config = config_path
-        pass
+
+    def set_patch(self, patch_path):
+        self.patch = patch_path
 
     def send_config(self, url):
         print('conifg path: '+ str(self.config) + 'server url: ' + str(url))
@@ -43,7 +45,11 @@ class Kernel(object):
         rest_manager = restful.ManaGer(url)
         # we are sending only uncompressed configuration files
         rest_manager.send_config(self.config, file)
-        pass
+
+    def send_patch(self, url):
+        print(self.patch)
+        rest_manager = restful.ManaGer(url)
+        rest_manager.send_config(self.patch, file)
 
 
 class CVE(object):
