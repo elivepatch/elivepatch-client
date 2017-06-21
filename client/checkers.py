@@ -44,13 +44,18 @@ class Kernel(object):
             self.config = path +'/'+file
         rest_manager = restful.ManaGer(url)
         # we are sending only uncompressed configuration files
-        rest_manager.send_config(self.config, file)
+        rest_manager.send_file(self.config, file, '/elivepatch/api/v1.0/config')
 
     def send_patch(self, url):
-        print(self.patch)
+        print("self.patch: "+ self.patch + ' url: '+url)
         rest_manager = restful.ManaGer(url)
-        rest_manager.send_config(self.patch, file)
+        path, file = (os.path.split(self.patch))
+        print('file :'+ file)
+        rest_manager.send_file(self.patch, file, '/elivepatch/api/v1.0/patch')
 
+    def build_livepatch(self, url):
+        rest_manager = restful.ManaGer(url)
+        rest_manager.build_livepatch()
 
 class CVE(object):
 
