@@ -15,8 +15,13 @@ class ManaGer(object):
         print(r.text)
         print(r.json())
 
-    def send_config(self, send_file, name_file):
-        url = self.server_url+'/elivepatch/api/v1.0/config'
+    def send_file(self, send_file, name_file, api):
+        url = self.server_url+ api
         files = {'file': (name_file, open(send_file, 'rb'), 'multipart/form-data', {'Expires': '0'})}
         r = requests.post(url, files=files)
 
+    def build_livepatch(self):
+        url = self.server_url+'/elivepatch/api/v1.0/livepatch'
+        r = requests.post(url)
+        print(r.text)
+        print(r.json())
