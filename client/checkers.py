@@ -57,6 +57,7 @@ class Kernel(object):
         rest_manager = restful.ManaGer(url)
         rest_manager.build_livepatch()
 
+
 class CVE(object):
 
     def __init__(self):
