@@ -22,6 +22,9 @@ class ManaGer(object):
 
     def build_livepatch(self):
         url = self.server_url+'/elivepatch/api/v1.0/livepatch'
-        r = requests.post(url)
+        payload = {
+                    'KernelVersion': '4.10.16'
+        }
+        r = requests.post(url, json=payload)
         print(r.text)
         print(r.json())
