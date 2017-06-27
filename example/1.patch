@@ -1,0 +1,31 @@
+From 9e9a69f979c701a7e1be91a8508d18868e7bab28 Mon Sep 17 00:00:00 2001
+From: "Jason A. Donenfeld" <Jason@zx2c4.com>
+Date: Thu, 8 Jun 2017 00:36:14 +0200
+Subject: [PATCH] exec: restrict argv size for suid binaries
+
+Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
+---
+ fs/exec.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/fs/exec.c b/fs/exec.c
+index 72934df68471..631f5374201f 100644
+--- a/fs/exec.c
++++ b/fs/exec.c
+@@ -243,6 +243,13 @@ static struct page *get_arg_page(struct linux_binprm *bprm, unsigned long pos,
+ 			put_page(page);
+ 			return NULL;
+ 		}
++
++		if (size > (512UL << 10) &&
++		    (!uid_eq(bprm->cred->euid, current_euid()) ||
++		     !gid_eq(bprm->cred->egid, current_egid()))) {
++			put_page(page);
++			return NULL;
++		}
+ 	}
+ 
+ 	return page;
+-- 
+2.13.0
+
