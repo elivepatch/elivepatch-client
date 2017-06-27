@@ -3,7 +3,6 @@ import os
 from git import Repo
 from elivepatch_client.client import restful
 import gzip
-import glob
 import os
 import os.path
 
