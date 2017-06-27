@@ -49,6 +49,7 @@ class Main(object):
             current_kernel.send_config(config.url)
             current_kernel.send_patch(config.url)
             current_kernel.build_livepatch(config.url)
+            current_kernel.get_livepatch(config.url)
         elif config.version:
             print('elivepatch version: '+str(VERSION))
         else:

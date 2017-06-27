@@ -3,7 +3,7 @@
 import json, base64
 import requests
 from requests.auth import HTTPBasicAuth
-
+import time
 
 class ManaGer(object):
     def __init__(self, server_url):
@@ -30,10 +30,19 @@ class ManaGer(object):
         print(r.json())
 
     def get_livepatch(self):
+        from io import BytesIO
         url = self.server_url+'/elivepatch/api/v1.0/get_livepatch'
         payload = {
             'KernelVersion': '4.10.16'
         }
-        r = requests.post(url, json=payload)
-        print(r.text)
-        print(r.json())
+        r = requests.get(url)
+        if r.status_code == requests.codes.ok:  # livepatch returned ok
+            b= BytesIO(r.content)
+            with open('myfile.ko', 'wb') as out:
+                out.write(r.content)
+            r.close()
+            print(b)
+        else:
+            r.close()
+            time.sleep(5)
+            return self.get_livepatch()  # try to get the livepatch again
