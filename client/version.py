@@ -1,17 +1,9 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
-#################################################################################
-# ELIVEPATCH_CLIENT VERSION
-#################################################################################
-# File:       version.py
 #
-#             Current version number
-#
-# Copyright:
-#             (c) 2017 Alice Ferrazzi <alicef@gentoo.org>
-#             Distributed under the terms of the GNU General Public License v2
-#
-#
+# (c) 2017, Alice Ferrazzi <alice.ferrazzi@gmail.com>
+# Distributed under the terms of the GNU General Public License v2 or later
+
 
 from __future__ import unicode_literals
 

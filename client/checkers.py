@@ -1,4 +1,9 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
+#
+# (c) 2017, Alice Ferrazzi <alice.ferrazzi@gmail.com>
+# Distributed under the terms of the GNU General Public License v2 or later
+
 import os
 from git import Repo
 from elivepatch_client.client import restful

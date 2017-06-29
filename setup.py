@@ -7,6 +7,6 @@ setup(
     url='https://gentoo.org',
     author='Alice Ferrazzi',
     author_email='alice.ferrazzi@gmail.com',
-    license='GNU GPLv2',
+    license='GNU GPLv2+',
     packages=find_packages(),
 )
