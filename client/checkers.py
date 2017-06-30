@@ -45,7 +45,7 @@ class Kernel(object):
             f_action = FileAction(path, file)
             path, file = f_action.ungz()
             # if the file is .gz the configuration path is the tmp folder uncompressed config file
-            self.config = path +'/'+file
+            self.config = os.path.join(path,file)
         rest_manager = restful.ManaGer(url)
         # we are sending only uncompressed configuration files
         rest_manager.send_file(self.config, file, '/elivepatch/api/v1.0/config')
