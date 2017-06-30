@@ -10,6 +10,7 @@ from elivepatch_client.client import restful
 import gzip
 import os
 import os.path
+import re
 
 
 class Kernel(object):
@@ -39,8 +40,7 @@ class Kernel(object):
         print('conifg path: '+ str(self.config) + 'server url: ' + str(url))
         print (os.path.basename(self.config))
         path, file = (os.path.split(self.config))
-        file_extension = os.path.splitext(file)[1]
-        if file_extension == ".gz":
+        if re.findall("[.]gz\Z", self.config):
             print('gz extension')
             f_action = FileAction(path, file)
             path, file = f_action.ungz()
