@@ -15,20 +15,17 @@ import re
 
 class Kernel(object):
 
-    def __init__(self):
-        self.minor = 0
-        self.major = 0
-        self.revision = 0
+    def __init__(self, url):
         self.config = ''
         self.patch = ''
+        self.url = url
+        self.kernel_version = self.get_version()
+        self.rest_manager = restful.ManaGer(url, self.kernel_version)
 
     def get_version(self):
-        tmp = os.uname()[2].split(".")
-        self.major = tmp[0]
-        self.minor = tmp[1]
-        tmp[2] = tmp[2].split("-")
-        self.revision = tmp[2][0]
-        return self.major, self.minor, self.revision
+        tmp = os.uname()[2]
+        version = tmp
+        return version
 
     def set_config(self, config_path):
         self.config = config_path
@@ -36,8 +33,8 @@ class Kernel(object):
     def set_patch(self, patch_path):
         self.patch = patch_path
 
-    def send_config(self, url):
-        print('conifg path: '+ str(self.config) + 'server url: ' + str(url))
+    def send_config(self):
+        print('conifg path: '+ str(self.config) + 'server url: ' + str(self. url))
         print (os.path.basename(self.config))
         path, file = (os.path.split(self.config))
         if re.findall("[.]gz\Z", self.config):
@@ -46,24 +43,20 @@ class Kernel(object):
             path, file = f_action.ungz()
             # if the file is .gz the configuration path is the tmp folder uncompressed config file
             self.config = os.path.join(path,file)
-        rest_manager = restful.ManaGer(url)
         # we are sending only uncompressed configuration files
-        rest_manager.send_file(self.config, file, '/elivepatch/api/v1.0/config')
+        self.rest_manager.send_file(self.config, file, '/elivepatch/api/v1.0/config')
 
-    def send_patch(self, url):
-        print("self.patch: "+ self.patch + ' url: '+url)
-        rest_manager = restful.ManaGer(url)
+    def send_patch(self):
+        print("self.patch: "+ self.patch + ' url: '+ self.url)
         path, file = (os.path.split(self.patch))
         print('file :'+ file)
-        rest_manager.send_file(self.patch, file, '/elivepatch/api/v1.0/patch')
+        self.rest_manager.send_file(self.patch, file, '/elivepatch/api/v1.0/patch')
 
-    def build_livepatch(self, url):
-        rest_manager = restful.ManaGer(url)
-        rest_manager.build_livepatch()
+    def build_livepatch(self):
+        self.rest_manager.build_livepatch()
 
-    def get_livepatch(self, url):
-        rest_manager = restful.ManaGer(url)
-        rest_manager.get_livepatch()
+    def get_livepatch(self):
+        self.rest_manager.get_livepatch()
 
 
 class CVE(object):

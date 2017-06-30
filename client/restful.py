@@ -10,8 +10,9 @@ from requests.auth import HTTPBasicAuth
 import time
 
 class ManaGer(object):
-    def __init__(self, server_url):
+    def __init__(self, server_url, kernel_version):
         self.server_url = server_url
+        self.kernel_version = kernel_version
 
     def version(self):
         url = self.server_url + '/elivepatch/api/v1.0/agent'
@@ -27,7 +28,7 @@ class ManaGer(object):
     def build_livepatch(self):
         url = self.server_url+'/elivepatch/api/v1.0/build_livepatch'
         payload = {
-                    'KernelVersion': '4.10.16'
+                    'KernelVersion': self.kernel_version
         }
         r = requests.post(url, json=payload)
         print(r.text)
@@ -37,7 +38,7 @@ class ManaGer(object):
         from io import BytesIO
         url = self.server_url+'/elivepatch/api/v1.0/get_livepatch'
         payload = {
-            'KernelVersion': '4.10.16'
+            'KernelVersion': self.kernel_version
         }
         r = requests.get(url)
         if r.status_code == requests.codes.ok:  # livepatch returned ok

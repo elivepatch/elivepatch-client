@@ -29,16 +29,15 @@ class Main(object):
         print(str(config))
         if config.cve:
             print('working on cve')
-            Kernel()
         elif config.patch:
             print('working with patch')
-            current_kernel = Kernel()
+            current_kernel = Kernel(config.url)
             current_kernel.set_config(config.config)
             current_kernel.set_patch(config.patch)
-            current_kernel.send_config(config.url)
-            current_kernel.send_patch(config.url)
-            current_kernel.build_livepatch(config.url)
-            current_kernel.get_livepatch(config.url)
+            current_kernel.send_config()
+            current_kernel.send_patch()
+            current_kernel.build_livepatch()
+            current_kernel.get_livepatch()
         elif config.version:
             print('elivepatch version: '+str(VERSION))
         else:
