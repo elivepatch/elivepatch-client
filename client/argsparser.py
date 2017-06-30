@@ -44,7 +44,7 @@ class ArgsParser(object):
         parser.add_argument("-k","--config", help="set kernel config file manually.")
         parser.add_argument("-u","--url", help="set elivepatch server url.")
         parser.add_argument("-d","--debug", action='store_true', help="set the debug option.")
-        parser.add_argument("-v","--version", action='store_true', help="set the verbose option.")
+        parser.add_argument("-v","--version", action='store_true', help="show the version.")
         self.args = parser.parse_args(remaining_argv)
 
     def get_arg(self):
