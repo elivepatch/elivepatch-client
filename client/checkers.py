@@ -101,5 +101,5 @@ class FileAction(object):
             with open(path_to_store, 'w') as f:
                 f.write(s)
             print('working')
-            path, file = (os.path.split(path_to_store))
-        return path, file
+            path, uncompressed_file = (os.path.split(path_to_store))
+        return path, uncompressed_file
