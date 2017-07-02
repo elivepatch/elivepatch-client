@@ -11,6 +11,7 @@ import gzip
 import os
 import os.path
 import re
+import shelve
 
 
 class Kernel(object):
@@ -21,6 +22,7 @@ class Kernel(object):
         self.url = url
         self.kernel_version = self.get_version()
         self.rest_manager = restful.ManaGer(url, self.kernel_version)
+        self.UserID = None
 
     def get_version(self):
         tmp = os.uname()[2]
@@ -34,6 +36,7 @@ class Kernel(object):
         self.patch = patch_path
 
     def send_config(self):
+        d = shelve.open('userid')
         print('conifg path: '+ str(self.config) + 'server url: ' + str(self. url))
         print (os.path.basename(self.config))
         path, file = (os.path.split(self.config))
@@ -44,13 +47,26 @@ class Kernel(object):
             # if the file is .gz the configuration path is the tmp folder uncompressed config file
             self.config = os.path.join(path,file)
         # we are sending only uncompressed configuration files
-        self.rest_manager.send_file(self.config, file, '/elivepatch/api/v1.0/config')
+        replay = self.rest_manager.send_file(self.config, file, '/elivepatch/api/v1.0/config')
+        userid = replay['get_config']['UserID']
+        old_userid = d['UserID']
+        if userid:
+            print(userid)
+            d['UserID'] = userid
+            d.close()
+
 
     def send_patch(self):
+        d = shelve.open('userid')
         print("self.patch: "+ self.patch + ' url: '+ self.url)
         path, file = (os.path.split(self.patch))
         print('file :'+ file)
-        self.rest_manager.send_file(self.patch, file, '/elivepatch/api/v1.0/patch')
+        replay = self.rest_manager.send_file(self.patch, file, '/elivepatch/api/v1.0/patch')
+        new_userid = replay['get_patch']['UserID']
+        if new_userid:
+            print(new_userid)
+            d['UserID'] = new_userid
+            d.close()
 
     def build_livepatch(self):
         self.rest_manager.build_livepatch()
