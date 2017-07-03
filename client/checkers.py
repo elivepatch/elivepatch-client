@@ -4,14 +4,15 @@
 # (c) 2017, Alice Ferrazzi <alice.ferrazzi@gmail.com>
 # Distributed under the terms of the GNU General Public License v2 or later
 
-import os
-from git import Repo
-from elivepatch_client.client import restful
 import gzip
+import shelve
+
 import os
 import os.path
 import re
-import shelve
+from git import Repo
+
+from elivepatch_client.client import restful
 
 
 class Kernel(object):
@@ -27,6 +28,8 @@ class Kernel(object):
     def get_version(self):
         tmp = os.uname()[2]
         version = tmp
+        if '-' in version:
+            version = version.split('-')[0]
         return version
 
     def set_config(self, config_path):
@@ -36,9 +39,11 @@ class Kernel(object):
         self.patch = patch_path
 
     def send_config(self):
-        d = shelve.open('userid')
+        # debug print
         print('conifg path: '+ str(self.config) + 'server url: ' + str(self. url))
         print (os.path.basename(self.config))
+
+        # check the configuration file
         path, file = (os.path.split(self.config))
         if re.findall("[.]gz\Z", self.config):
             print('gz extension')
@@ -46,27 +51,70 @@ class Kernel(object):
             path, file = f_action.ungz()
             # if the file is .gz the configuration path is the tmp folder uncompressed config file
             self.config = os.path.join(path,file)
-        # we are sending only uncompressed configuration files
-        replay = self.rest_manager.send_file(self.config, file, '/elivepatch/api/v1.0/config')
-        userid = replay['get_config']['UserID']
-        old_userid = d['UserID']
-        if userid:
-            print(userid)
-            d['UserID'] = userid
-            d.close()
 
+        # check userID
+        data_store = shelve.open('userid')
+
+        # get old userid if present
+        try:
+            old_userid = data_store['UserID']
+        except:
+            old_userid = None
+            print('no UserID')
+
+        # send only uncompressed config
+        replay = self.rest_manager.send_file(self.config, file, '/elivepatch/api/v1.0/config')
+
+        # get userid returned from the server
+        userid = replay['get_config']['UserID']
+        self.rest_manager.set_user_id(userid)
+
+        # check if the userid is new
+        if userid:
+            try:
+                if userid != old_userid:
+                    print('new userid: ' + str(userid))
+                    data_store['UserID'] = userid
+                    data_store.close()
+            except:
+                pass
 
     def send_patch(self):
-        d = shelve.open('userid')
         print("self.patch: "+ self.patch + ' url: '+ self.url)
         path, file = (os.path.split(self.patch))
         print('file :'+ file)
-        replay = self.rest_manager.send_file(self.patch, file, '/elivepatch/api/v1.0/patch')
-        new_userid = replay['get_patch']['UserID']
-        if new_userid:
-            print(new_userid)
-            d['UserID'] = new_userid
-            d.close()
+
+        data_store = shelve.open('userid')
+
+        # get old userid if present
+        try:
+            old_userid = data_store['UserID']
+        except:
+            old_userid = None
+            print('no UserID')
+
+        # send only uncompressed config
+        replay = self.rest_manager.send_file(self.config, file, '/elivepatch/api/v1.0/patch')
+
+        print(replay)
+        # get userid returned from the server
+        userid = replay['get_patch']['UserID']
+
+        # get old userid if present
+        try:
+            old_userid = data_store['UserID']
+        except:
+            print('no UserID')
+
+        if userid:
+            try:
+                if userid != old_userid:
+                    self.rest_manager.set_user_id(userid)
+                    print(userid)
+                    data_store['UserID'] = userid
+                    data_store.close()
+            except:
+                pass
 
     def build_livepatch(self):
         self.rest_manager.build_livepatch()

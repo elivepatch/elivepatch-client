@@ -9,9 +9,17 @@ import requests
 
 
 class ManaGer(object):
+
     def __init__(self, server_url, kernel_version):
         self.server_url = server_url
         self.kernel_version = kernel_version
+        self.user_id = None
+
+    def set_user_id(self, user_id):
+        self.user_id = user_id
+
+    def get_user_id(self):
+        return self.user_id
 
     def version(self):
         url = self.server_url + '/elivepatch/api/v1.0/agent'
@@ -25,26 +33,22 @@ class ManaGer(object):
         # The server is dividing user by UserID
         # UserID is generated with python UUID
         # TODO: add the UserID in the json location instead of headers
-        headers = {'UserID': 'test-00001'}
+        headers = {
+            'KernelVersion' : 'aaaa',
+            'UserID': self.user_id
+        }
         files = {'file': (name_file, open(send_file, 'rb'), 'multipart/form-data', {'Expires': '0'})}
-        payload = {
-            "KernelVersion" : ("aaaa", 'application/json', {'Expires': '0'}),
-            "LivepatchStatus" : ("not known", 'application/json', {'Expires': '0'}),
-            "UserID" : ("test-00001",'application/json', {'Expires': '0'})
-            }
         r = requests.post(url, files=files, headers=headers)
         print('send file: ' + str(r.json()))
         r_dict = r.json()
         return r_dict
 
 
-
     def build_livepatch(self):
         url = self.server_url+'/elivepatch/api/v1.0/build_livepatch'
         payload = {
             'KernelVersion': self.kernel_version,
-            'LivepatchStatus' : 'no idea',
-            'UserID' : 'test-0000'
+            'UserID' : self.user_id
         }
         r = requests.post(url, json=payload)
         # print(r.text)
@@ -55,8 +59,7 @@ class ManaGer(object):
         url = self.server_url+'/elivepatch/api/v1.0/get_livepatch'
         payload = {
             'KernelVersion': self.kernel_version,
-            'LivepatchStatus' : 'no idea',
-            'UserID' : 'test-0000'
+            'UserID' : 'test-0001'
         }
         r = requests.get(url, json=payload)
         if r.status_code == requests.codes.ok:  # livepatch returned ok

@@ -4,12 +4,11 @@
 # (c) 2017, Alice Ferrazzi <alice.ferrazzi@gmail.com>
 # Distributed under the terms of the GNU General Public License v2 or later
 
-import os, sys
-from elivepatch_client.client.checkers import CVE
+import sys
+
 from elivepatch_client.client.checkers import Kernel
 from elivepatch_client.client.restful import ManaGer
 from elivepatch_client.client.version import VERSION
-
 
 if sys.hexversion >= 0x30200f0:
     ALL_KEYWORD = b'ALL'
@@ -18,7 +17,8 @@ else:
 
 
 class Main(object):
-    """Performs the actions the user selected.
+    """
+    Performs the actions selected by the user
     """
 
     def __init__(self, argparser):
