@@ -34,7 +34,7 @@ class ManaGer(object):
         # UserID is generated with python UUID
         # TODO: add the UserID in the json location instead of headers
         headers = {
-            'KernelVersion' : 'aaaa',
+            'KernelVersion' : self.kernel_version,
             'UserID': self.user_id
         }
         files = {'file': (name_file, open(send_file, 'rb'), 'multipart/form-data', {'Expires': '0'})}

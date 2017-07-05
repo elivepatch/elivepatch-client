@@ -51,6 +51,8 @@ class Kernel(object):
             path, file = f_action.ungz()
             # if the file is .gz the configuration path is the tmp folder uncompressed config file
             self.config = os.path.join(path,file)
+            self.kernel_version = f_action.config_kernel_version(self.config)
+
 
         # check userID
         data_store = shelve.open('userid')
@@ -160,3 +162,16 @@ class FileAction(object):
             print('working')
             path, uncompressed_file = (os.path.split(path_to_store))
         return path, uncompressed_file
+
+    def config_kernel_version(self, uncompressed_config_file):
+        with open(uncompressed_config_file) as f:
+            i = 0
+            while i < 2:
+                f.readline()
+                if i == 1:
+                    kernel_line = f.readline()
+                i += 1
+        kernel_version_raw = (kernel_line.split(' ')[2])
+        kernel_version = kernel_version_raw.split(('-'))[0]
+        return kernel_version
+
