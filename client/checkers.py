@@ -45,13 +45,16 @@ class Kernel(object):
 
         # check the configuration file
         path, file = (os.path.split(self.config))
+        f_action = FileAction(path, file)
         if re.findall("[.]gz\Z", self.config):
             print('gz extension')
-            f_action = FileAction(path, file)
             path, file = f_action.ungz()
             # if the file is .gz the configuration path is the tmp folder uncompressed config file
             self.config = os.path.join(path,file)
-            self.kernel_version = f_action.config_kernel_version(self.config)
+        print(self.config)
+        self.kernel_version = f_action.config_kernel_version(self.config)
+        self.rest_manager.set_kernel_version(self.kernel_version)
+        print(self.rest_manager.get_kernel_version())
 
 
         # check userID

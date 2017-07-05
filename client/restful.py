@@ -17,6 +17,12 @@ class ManaGer(object):
 
     def set_user_id(self, user_id):
         self.user_id = user_id
+    
+    def set_kernel_version(self, kernel_version):
+        self.kernel_version = kernel_version
+    
+    def get_kernel_version(self):
+        return self.kernel_version
 
     def get_user_id(self):
         return self.user_id
