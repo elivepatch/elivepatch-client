@@ -59,7 +59,7 @@ class ManaGer(object):
         url = self.server_url+'/elivepatch/api/v1.0/get_livepatch'
         payload = {
             'KernelVersion': self.kernel_version,
-            'UserID' : 'test-0001'
+            'UserID' : self.user_id
         }
         r = requests.get(url, json=payload)
         if r.status_code == requests.codes.ok:  # livepatch returned ok

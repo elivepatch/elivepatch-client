@@ -94,7 +94,7 @@ class Kernel(object):
             print('no UserID')
 
         # send only uncompressed config
-        replay = self.rest_manager.send_file(self.config, file, '/elivepatch/api/v1.0/patch')
+        replay = self.rest_manager.send_file(self.patch, file, '/elivepatch/api/v1.0/patch')
 
         print(replay)
         # get userid returned from the server
@@ -155,7 +155,7 @@ class FileAction(object):
                 s = in_file.read()
             # Store uncompressed file
             path_to_store = store_file_path[:-3]  # remove the filename extension
-            with open(path_to_store, 'w') as f:
+            with open(path_to_store, 'wb') as f:
                 f.write(s)
             print('working')
             path, uncompressed_file = (os.path.split(path_to_store))
