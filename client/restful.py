@@ -33,7 +33,7 @@ class ManaGer(object):
         print(r.text)
         print(r.json())
 
-    def send_file(self, send_file, name_file, api):
+    def send_file(self, config_send_file, patch_send_file, config_file_name, patch_file_name, api):
         url = self.server_url+ api
         # we are sending the file and the UserID
         # The server is dividing user by UserID
@@ -43,7 +43,9 @@ class ManaGer(object):
             'KernelVersion' : self.kernel_version,
             'UserID': self.user_id
         }
-        files = {'file': (name_file, open(send_file, 'rb'), 'multipart/form-data', {'Expires': '0'})}
+        files = {'patch': (patch_file_name, open(patch_send_file, 'rb'), 'multipart/form-data', {'Expires': '0'}),
+                 'config': (config_file_name, open(config_send_file, 'rb'), 'multipart/form-data', {'Expires': '0'})}
+        print(str(files))
         r = requests.post(url, files=files, headers=headers)
         print('send file: ' + str(r.json()))
         r_dict = r.json()
@@ -62,7 +64,7 @@ class ManaGer(object):
 
     def get_livepatch(self):
         from io import BytesIO
-        url = self.server_url+'/elivepatch/api/v1.0/get_livepatch'
+        url = self.server_url+'/elivepatch/api/v1.0/send_livepatch'
         payload = {
             'KernelVersion': self.kernel_version,
             'UserID' : self.user_id

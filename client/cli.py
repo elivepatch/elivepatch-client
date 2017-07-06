@@ -34,8 +34,7 @@ class Main(object):
             current_kernel = Kernel(config.url)
             current_kernel.set_config(config.config)
             current_kernel.set_patch(config.patch)
-            current_kernel.send_config()
-            current_kernel.send_patch()
+            current_kernel.send_files()
             current_kernel.build_livepatch()
             current_kernel.get_livepatch()
         elif config.version:

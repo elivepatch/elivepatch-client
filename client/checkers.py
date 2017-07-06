@@ -38,7 +38,7 @@ class Kernel(object):
     def set_patch(self, patch_path):
         self.patch = patch_path
 
-    def send_config(self):
+    def send_files(self):
         # debug print
         print('conifg path: '+ str(self.config) + 'server url: ' + str(self. url))
         print (os.path.basename(self.config))
@@ -56,6 +56,8 @@ class Kernel(object):
         self.rest_manager.set_kernel_version(self.kernel_version)
         print(self.rest_manager.get_kernel_version())
 
+        path, patch_file = (os.path.split(self.patch))
+
 
         # check userID
         data_store = shelve.open('userid')
@@ -68,7 +70,7 @@ class Kernel(object):
             print('no UserID')
 
         # send only uncompressed config
-        replay = self.rest_manager.send_file(self.config, file, '/elivepatch/api/v1.0/config')
+        replay = self.rest_manager.send_file(self.config, self.patch, file, patch_file, '/elivepatch/api/v1.0/get_files')
 
         # get userid returned from the server
         userid = replay['get_config']['UserID']
@@ -79,43 +81,6 @@ class Kernel(object):
             try:
                 if userid != old_userid:
                     print('new userid: ' + str(userid))
-                    data_store['UserID'] = userid
-                    data_store.close()
-            except:
-                pass
-
-    def send_patch(self):
-        print("self.patch: "+ self.patch + ' url: '+ self.url)
-        path, file = (os.path.split(self.patch))
-        print('file :'+ file)
-
-        data_store = shelve.open('userid')
-
-        # get old userid if present
-        try:
-            old_userid = data_store['UserID']
-        except:
-            old_userid = None
-            print('no UserID')
-
-        # send only uncompressed config
-        replay = self.rest_manager.send_file(self.patch, file, '/elivepatch/api/v1.0/patch')
-
-        print(replay)
-        # get userid returned from the server
-        userid = replay['get_patch']['UserID']
-
-        # get old userid if present
-        try:
-            old_userid = data_store['UserID']
-        except:
-            print('no UserID')
-
-        if userid:
-            try:
-                if userid != old_userid:
-                    self.rest_manager.set_user_id(userid)
-                    print(userid)
                     data_store['UserID'] = userid
                     data_store.close()
             except:
