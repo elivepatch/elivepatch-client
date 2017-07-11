@@ -6,6 +6,8 @@
 
 import time
 import requests
+import os
+import shutil
 
 
 class ManaGer(object):
@@ -79,4 +81,9 @@ class ManaGer(object):
         else:
             r.close()
             time.sleep(5)
-            return self.get_livepatch()  # try to get the livepatch again
+            return self.get_livepatch() # try to get the livepatch again
+        elivepatch_dir = os.path.join('..', 'elivepatch-'+ self.user_id)
+        if not os.path.exists(elivepatch_dir):
+            os.makedirs(elivepatch_dir)
+        shutil.move("myfile.ko", os.path.join(elivepatch_dir, 'livepatch.ko'))
+
