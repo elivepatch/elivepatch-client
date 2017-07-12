@@ -21,16 +21,9 @@ class Kernel(object):
         self.config = ''
         self.patch = ''
         self.url = url
-        self.kernel_version = self.get_version()
+        self.kernel_version = None
         self.rest_manager = restful.ManaGer(url, self.kernel_version)
         self.UserID = None
-
-    def get_version(self):
-        tmp = os.uname()[2]
-        version = tmp
-        if '-' in version:
-            version = version.split('-')[0]
-        return version
 
     def set_config(self, config_path):
         self.config = config_path
@@ -39,10 +32,6 @@ class Kernel(object):
         self.patch = patch_path
 
     def send_files(self):
-        # debug print
-        print('conifg path: '+ str(self.config) + 'server url: ' + str(self. url))
-        print (os.path.basename(self.config))
-
         # check the configuration file
         path, file = (os.path.split(self.config))
         f_action = FileAction(path, file)
@@ -51,10 +40,11 @@ class Kernel(object):
             path, file = f_action.ungz()
             # if the file is .gz the configuration path is the tmp folder uncompressed config file
             self.config = os.path.join(path,file)
-        print(self.config)
+
+        # Get kernel version from the configuration file header
         self.kernel_version = f_action.config_kernel_version(self.config)
         self.rest_manager.set_kernel_version(self.kernel_version)
-        print(self.rest_manager.get_kernel_version())
+        print('debug: kernel version =' + self.rest_manager.get_kernel_version())
 
         path, patch_file = (os.path.split(self.patch))
 
@@ -69,7 +59,7 @@ class Kernel(object):
             old_userid = None
             print('no UserID')
 
-        # send only uncompressed config
+        # send uncompressed config and patch files
         replay = self.rest_manager.send_file(self.config, self.patch, file, patch_file, '/elivepatch/api/v1.0/get_files')
 
         # get userid returned from the server

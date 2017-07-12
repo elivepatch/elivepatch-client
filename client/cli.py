@@ -30,7 +30,6 @@ class Main(object):
         if config.cve:
             print('working on cve')
         elif config.patch:
-            print('working with patch')
             current_kernel = Kernel(config.url)
             current_kernel.set_config(config.config)
             current_kernel.set_patch(config.patch)
