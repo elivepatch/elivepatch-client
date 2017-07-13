@@ -17,13 +17,13 @@ from elivepatch_client.client import restful
 
 class Kernel(object):
 
-    def __init__(self, url):
+    def __init__(self, restserver_url):
         self.config = ''
         self.patch = ''
-        self.url = url
+        self.restserver_url = restserver_url
         self.kernel_version = None
-        self.rest_manager = restful.ManaGer(url, self.kernel_version)
-        self.UserID = None
+        self.rest_manager = restful.ManaGer(self.restserver_url, self.kernel_version)
+        self.uuid = None
 
     def set_config(self, config_path):
         self.config = config_path
@@ -49,29 +49,32 @@ class Kernel(object):
         path, patch_file = (os.path.split(self.patch))
 
 
-        # check userID
-        data_store = shelve.open('userid')
+        # check uuid
+        data_store = shelve.open('uuid')
 
-        # get old userid if present
+        # get old uuid if present
         try:
-            old_userid = data_store['UserID']
+            old_uuid = data_store['UUID']
         except:
-            old_userid = None
-            print('no UserID')
+            old_uuid = None
+            print('no UUID')
 
         # send uncompressed config and patch files
         replay = self.rest_manager.send_file(self.config, self.patch, file, patch_file, '/elivepatch/api/v1.0/get_files')
 
-        # get userid returned from the server
-        userid = replay['get_config']['UserID']
-        self.rest_manager.set_user_id(userid)
+        # get uuid returned from the server
+        try:
+            uuid = replay['get_config']['UUID']
+        except:
+            uuid = None
+        self.rest_manager.set_uuid(uuid)
 
-        # check if the userid is new
-        if userid:
+        # check if the uuid is new
+        if uuid:
             try:
-                if userid != old_userid:
-                    print('new userid: ' + str(userid))
-                    data_store['UserID'] = userid
+                if uuid != old_uuid or not old_uuid:
+                    print('new uuid: ' + str(uuid))
+                    data_store['UUID'] = uuid
                     data_store.close()
             except:
                 pass
