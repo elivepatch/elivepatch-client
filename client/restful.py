@@ -4,7 +4,6 @@
 # (c) 2017, Alice Ferrazzi <alice.ferrazzi@gmail.com>
 # Distributed under the terms of the GNU General Public License v2 or later
 
-import time
 import requests
 import os
 import shutil
@@ -15,6 +14,7 @@ class ManaGer(object):
     def __init__(self, server_url, kernel_version):
         self.server_url = server_url
         self.kernel_version = kernel_version
+        # universally unique identifier for multi-threading
         self.uuid = None
 
     def set_uuid(self, uuid):
@@ -32,7 +32,6 @@ class ManaGer(object):
     def version(self):
         url = self.server_url + '/elivepatch/api/v1.0/agent'
         r = requests.get(url)
-        print(r.text)
         print(r.json())
 
     def send_file(self, config_send_file, patch_send_file, config_file_name, patch_file_name, api):
@@ -53,7 +52,6 @@ class ManaGer(object):
         r_dict = r.json()
         return r_dict
 
-
     def build_livepatch(self):
         url = self.server_url+'/elivepatch/api/v1.0/build_livepatch'
         payload = {
@@ -61,7 +59,6 @@ class ManaGer(object):
             'UUID' : self.uuid
         }
         r = requests.post(url, json=payload)
-        # print(r.text)
         print(r.json())
 
     def get_livepatch(self):
@@ -83,8 +80,8 @@ class ManaGer(object):
                 print('livepatch not found')
                 r.close()
 
-        elivepatch_dir = os.path.join('..', 'elivepatch-'+ self.uuid)
-        if not os.path.exists(elivepatch_dir):
-            os.makedirs(elivepatch_dir)
-        shutil.move("myfile.ko", os.path.join(elivepatch_dir, 'livepatch.ko'))
+        elivepatch_uuid_dir = os.path.join('..', 'elivepatch-'+ self.uuid)
+        if not os.path.exists(elivepatch_uuid_dir):
+            os.makedirs(elivepatch_uuid_dir)
+        shutil.move("myfile.ko", os.path.join(elivepatch_uuid_dir, 'livepatch.ko'))
 
