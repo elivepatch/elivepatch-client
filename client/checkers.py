@@ -5,7 +5,6 @@
 # Distributed under the terms of the GNU General Public License v2 or later
 
 import gzip
-import shelve
 import uuid
 
 import os
@@ -31,8 +30,9 @@ class Kernel(object):
         self.patch = ''
         self.restserver_url = restserver_url
         self.kernel_version = None
-        self.rest_manager = restful.ManaGer(self.restserver_url, self.kernel_version)
-        self.uuid = id_generate_uuid()
+        self.session_uuid = id_generate_uuid()
+        print('This session uuid: ' + str(self.session_uuid))
+        self.rest_manager = restful.ManaGer(self.restserver_url, self.kernel_version, self.session_uuid)
 
     def set_config(self, config_path):
         self.config = config_path
@@ -53,40 +53,12 @@ class Kernel(object):
         # Get kernel version from the configuration file header
         self.kernel_version = f_action.config_kernel_version(self.config)
         self.rest_manager.set_kernel_version(self.kernel_version)
-        print('debug: kernel version =' + self.rest_manager.get_kernel_version())
+        print('debug: kernel version = ' + self.rest_manager.get_kernel_version())
 
         path, patch_file = (os.path.split(self.patch))
 
-
-        # check uuid
-        data_store = shelve.open('uuid')
-
-        # get old uuid if present
-        try:
-            old_uuid = data_store['UUID']
-        except:
-            old_uuid = None
-            print('no UUID')
-
         # send uncompressed config and patch files
         replay = self.rest_manager.send_file(self.config, self.patch, file, patch_file, '/elivepatch/api/v1.0/get_files')
-
-        # get uuid returned from the server
-        try:
-            uuid = replay['get_config']['UUID']
-        except:
-            uuid = None
-        self.rest_manager.set_uuid(uuid)
-
-        # check if the uuid is new
-        if uuid:
-            try:
-                if uuid != old_uuid or not old_uuid:
-                    print('new uuid: ' + str(uuid))
-                    data_store['UUID'] = uuid
-                    data_store.close()
-            except:
-                pass
 
     def build_livepatch(self):
         self.rest_manager.build_livepatch()

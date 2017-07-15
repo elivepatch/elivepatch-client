@@ -14,11 +14,11 @@ class ManaGer(object):
     RESTful client functions
     """
 
-    def __init__(self, server_url, kernel_version):
+    def __init__(self, server_url, kernel_version, uuid):
         self.server_url = server_url
         self.kernel_version = kernel_version
         # universally unique identifier for multi-threading
-        self.uuid = None
+        self.uuid = uuid
 
     def set_uuid(self, uuid):
         self.uuid = uuid
