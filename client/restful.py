@@ -10,6 +10,9 @@ import shutil
 
 
 class ManaGer(object):
+    """
+    RESTful client functions
+    """
 
     def __init__(self, server_url, kernel_version):
         self.server_url = server_url
@@ -19,10 +22,10 @@ class ManaGer(object):
 
     def set_uuid(self, uuid):
         self.uuid = uuid
-    
+
     def set_kernel_version(self, kernel_version):
         self.kernel_version = kernel_version
-    
+
     def get_kernel_version(self):
         return self.kernel_version
 
@@ -84,4 +87,3 @@ class ManaGer(object):
         if not os.path.exists(elivepatch_uuid_dir):
             os.makedirs(elivepatch_uuid_dir)
         shutil.move("myfile.ko", os.path.join(elivepatch_uuid_dir, 'livepatch.ko'))
-

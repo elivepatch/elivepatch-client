@@ -6,6 +6,7 @@
 
 import gzip
 import shelve
+import uuid
 
 import os
 import os.path
@@ -15,7 +16,15 @@ from git import Repo
 from elivepatch_client.client import restful
 
 
+def id_generate_uuid():
+    generated_uuid = str(uuid.uuid4())
+    return generated_uuid
+
+
 class Kernel(object):
+    """
+    Class for manage the kernels files
+    """
 
     def __init__(self, restserver_url):
         self.config = ''
@@ -23,7 +32,7 @@ class Kernel(object):
         self.restserver_url = restserver_url
         self.kernel_version = None
         self.rest_manager = restful.ManaGer(self.restserver_url, self.kernel_version)
-        self.uuid = None
+        self.uuid = id_generate_uuid()
 
     def set_config(self, config_path):
         self.config = config_path
