@@ -25,40 +25,43 @@ class Kernel(object):
     Class for manage the kernels files
     """
 
-    def __init__(self, restserver_url):
-        self.config = ''
-        self.patch = ''
+    def __init__(self, restserver_url, session_uuid=None):
+        self.config_fullpath = ''
+        self.patch_fullpath = ''
         self.restserver_url = restserver_url
         self.kernel_version = None
-        self.session_uuid = id_generate_uuid()
+        if session_uuid:
+            self.session_uuid = session_uuid
+        else:
+            self.session_uuid = id_generate_uuid()
         print('This session uuid: ' + str(self.session_uuid))
         self.rest_manager = restful.ManaGer(self.restserver_url, self.kernel_version, self.session_uuid)
 
-    def set_config(self, config_path):
-        self.config = config_path
+    def set_config(self, config_fullpath):
+        self.config_fullpath = config_fullpath
 
-    def set_patch(self, patch_path):
-        self.patch = patch_path
+    def set_patch(self, patch_fullpath):
+        self.patch_fullpath = patch_fullpath
 
     def send_files(self):
         # check the configuration file
-        path, file = (os.path.split(self.config))
+        path, file = (os.path.split(self.config_fullpath))
         f_action = FileAction(path, file)
-        if re.findall("[.]gz\Z", self.config):
+        if re.findall("[.]gz\Z", self.config_fullpath):
             print('gz extension')
             path, file = f_action.ungz()
             # if the file is .gz the configuration path is the tmp folder uncompressed config file
-            self.config = os.path.join(path,file)
+            self.config_fullpath = os.path.join(path, file)
 
         # Get kernel version from the configuration file header
-        self.kernel_version = f_action.config_kernel_version(self.config)
+        self.kernel_version = f_action.config_kernel_version(self.config_fullpath)
         self.rest_manager.set_kernel_version(self.kernel_version)
         print('debug: kernel version = ' + self.rest_manager.get_kernel_version())
 
-        path, patch_file = (os.path.split(self.patch))
+        path, patch_filename = (os.path.split(self.patch_fullpath))
 
         # send uncompressed config and patch files
-        replay = self.rest_manager.send_file(self.config, self.patch, file, patch_file, '/elivepatch/api/v1.0/get_files')
+        replay = self.rest_manager.send_file(self.config_fullpath, self.patch_fullpath, file, patch_filename, '/elivepatch/api/v1.0/get_files')
 
     def build_livepatch(self):
         self.rest_manager.build_livepatch()
