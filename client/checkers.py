@@ -59,9 +59,10 @@ class Kernel(object):
         print('debug: kernel version = ' + self.rest_manager.get_kernel_version())
 
         path, patch_filename = (os.path.split(self.patch_fullpath))
+        send_api = '/elivepatch/api/v1.0/get_files'
 
         # send uncompressed config and patch files
-        replay = self.rest_manager.send_file(self.config_fullpath, self.patch_fullpath, file, patch_filename, '/elivepatch/api/v1.0/get_files')
+        self.rest_manager.send_file(self.config_fullpath, self.patch_fullpath, file, patch_filename, send_api)
 
     def build_livepatch(self):
         self.rest_manager.build_livepatch()
