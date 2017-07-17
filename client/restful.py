@@ -17,7 +17,7 @@ class ManaGer(object):
     def __init__(self, server_url, kernel_version, uuid):
         self.server_url = server_url
         self.kernel_version = kernel_version
-        # universally unique identifier for multi-threading
+        # universally unique identifier for support multiple request
         self.uuid = uuid
 
     def set_uuid(self, uuid):
