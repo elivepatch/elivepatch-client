@@ -95,9 +95,9 @@ class FileAction(object):
 
     def ungz(self):
         path_to_store = None
-        get_file_path = self.path +'/'+self.filename
-        store_file_path = '/tmp/'+self.filename
-        print('file_path: '+ get_file_path)
+        get_file_path = os.path.join(self.path, self.filename)
+        store_file_path = os.path.join('/tmp', self.filename)
+        print('get_file_path: '+ get_file_path + ' store_file_path: ' + store_file_path)
         if not os.path.isdir(get_file_path):
             with gzip.open(get_file_path, 'rb') as in_file:
                 s = in_file.read()
