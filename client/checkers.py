@@ -22,9 +22,8 @@ def id_generate_uuid():
 
 class Kernel(object):
     """
-    Class for manage the kernels files
+    Manage kernels files
     """
-
     def __init__(self, restserver_url, session_uuid=None):
         self.config_fullpath = ''
         self.patch_fullpath = ''
@@ -77,7 +76,9 @@ class Kernel(object):
 
 
 class CVE(object):
-
+    """
+    Check the kernel against a CVE repository
+    """
     def __init__(self):
         self.git_url = "https://github.com/nluedtke/linux_kernel_cves"
         self.repo_dir = "/tmp/kernel_cve/"
@@ -92,13 +93,19 @@ class CVE(object):
 
 
 class FileAction(object):
-
+    """
+    Work with files
+    """
     def __init__(self, path, filename):
         self.path = path
         self.filename = filename
         pass
 
     def ungz(self):
+        """
+        Uncompress gzipped configuration
+        :return: Uncompressed configuration file path
+        """
         path_to_store = None
         path_gz_file = os.path.join(self.path, self.filename)
         temporary_path_uncompressed_file = os.path.join('/tmp', self.filename)
@@ -116,6 +123,11 @@ class FileAction(object):
         return path, uncompressed_file
 
     def config_kernel_version(self, uncompressed_config_file):
+        """
+        Find the kernel version from where the configuration as been generated
+        :param uncompressed_config_file:
+        :return: kernel version
+        """
         with open(uncompressed_config_file) as f:
             i = 0
             while i < 2:
