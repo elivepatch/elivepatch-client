@@ -37,7 +37,7 @@ class ManaGer(object):
         r = requests.get(url)
         print(r.json())
 
-    def send_file(self, config_send_file, patch_send_file, config_file_name, patch_file_name, api):
+    def send_file(self, config_fullpath, patch_fullpath, api):
         url = self.server_url+ api
         # we are sending the file and the UUID
         # The server is dividing user by UUID
@@ -47,8 +47,10 @@ class ManaGer(object):
             'KernelVersion' : self.kernel_version,
             'UUID': self.uuid
         }
-        files = {'patch': (patch_file_name, open(patch_send_file, 'rb'), 'multipart/form-data', {'Expires': '0'}),
-                 'config': (config_file_name, open(config_send_file, 'rb'), 'multipart/form-data', {'Expires': '0'})}
+        patch_filename = (os.path.split(patch_fullpath))[1]
+        config_filename = (os.path.split(config_fullpath))[1]
+        files = {'patch': (patch_filename, open(patch_fullpath, 'rb'), 'multipart/form-data', {'Expires': '0'}),
+                 'config': (config_filename, open(config_fullpath, 'rb'), 'multipart/form-data', {'Expires': '0'})}
         print(str(files))
         r = requests.post(url, files=files, headers=headers)
         print('send file: ' + str(r.json()))
