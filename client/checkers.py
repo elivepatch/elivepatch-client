@@ -44,9 +44,14 @@ class Kernel(object):
         self.patch_fullpath = patch_fullpath
 
     def send_files(self):
-        # check the configuration file
+        """
+        Send config and patch files
+
+        :return: void
+        """
         path, file = (os.path.split(self.config_fullpath))
         f_action = FileAction(path, file)
+        # check the configuration file
         if re.findall("[.]gz\Z", self.config_fullpath):
             print('gz extension')
             path, file = f_action.ungz()
@@ -95,14 +100,15 @@ class FileAction(object):
 
     def ungz(self):
         path_to_store = None
-        get_file_path = os.path.join(self.path, self.filename)
-        store_file_path = os.path.join('/tmp', self.filename)
-        print('get_file_path: '+ get_file_path + ' store_file_path: ' + store_file_path)
-        if not os.path.isdir(get_file_path):
-            with gzip.open(get_file_path, 'rb') as in_file:
+        path_gz_file = os.path.join(self.path, self.filename)
+        temporary_path_uncompressed_file = os.path.join('/tmp', self.filename)
+        print('path_gz_file: '+ path_gz_file + ' temporary_path_uncompressed_file: ' +
+              temporary_path_uncompressed_file)
+        if not os.path.isdir(path_gz_file):
+            with gzip.open(path_gz_file, 'rb') as in_file:
                 s = in_file.read()
             # Store uncompressed file
-            path_to_store = store_file_path[:-3]  # remove the filename extension
+            path_to_store = temporary_path_uncompressed_file[:-3]  # remove the filename extension
             with open(path_to_store, 'wb') as f:
                 f.write(s)
             print('working')
