@@ -37,7 +37,7 @@ class ManaGer(object):
         r = requests.get(url)
         print(r.json())
 
-    def send_file(self, config_fullpath, patch_fullpath, api):
+    def send_file(self, temporary_config, patch_fullpath, api):
         url = self.server_url+ api
         # we are sending the file and the UUID
         # The server is dividing user by UUID
@@ -48,10 +48,10 @@ class ManaGer(object):
             'UUID': self.uuid
         }
         patch_filename = (os.path.split(patch_fullpath))[1]
-        config_filename = (os.path.split(config_fullpath))[1]
         files = {'patch': (patch_filename, open(patch_fullpath, 'rb'), 'multipart/form-data', {'Expires': '0'}),
-                 'config': (config_filename, open(config_fullpath, 'rb'), 'multipart/form-data', {'Expires': '0'})}
+                 'config': ('config', open(temporary_config.name, 'rb'), 'multipart/form-data', {'Expires': '0'})}
         print(str(files))
+        temporary_config.close()
         r = requests.post(url, files=files, headers=headers)
         print('send file: ' + str(r.json()))
         r_dict = r.json()

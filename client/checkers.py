@@ -6,6 +6,7 @@
 
 import gzip
 import uuid
+import tempfile
 
 import os
 import os.path
@@ -48,24 +49,30 @@ class Kernel(object):
 
         :return: void
         """
-        path, file = (os.path.split(self.config_fullpath))
         f_action = FileAction(self.config_fullpath)
+        temporary_config = tempfile.NamedTemporaryFile(delete=False)
         # check the configuration file
+        # TODO: make it more compact
         if re.findall("[.]gz\Z", self.config_fullpath):
             print('gz extension')
-            path, file = f_action.ungz()
-            # if the file is .gz the configuration path is the tmp folder uncompressed config file
-            self.config_fullpath = os.path.join(path, file)
-
+            # uncompress the gzip config file
+            # return configuration temporary folder
+            temporary_config = f_action.ungz(temporary_config)
+        else:
+            # read already uncompressed configuration
+            with open(self.config_fullpath, 'rb') as in_file:
+                config = in_file.read()
+                # Store uncompressed temporary file
+            temporary_config.write(config)
         # Get kernel version from the configuration file header
-        self.kernel_version = f_action.config_kernel_version(self.config_fullpath)
+        self.kernel_version = f_action.config_kernel_version(temporary_config)
         self.rest_manager.set_kernel_version(self.kernel_version)
         print('debug: kernel version = ' + self.rest_manager.get_kernel_version())
 
         send_api = '/elivepatch/api/v1.0/get_files'
 
         # send uncompressed config and patch files fullpath
-        self.rest_manager.send_file(self.config_fullpath, self.patch_fullpath, send_api)
+        self.rest_manager.send_file(temporary_config, self.patch_fullpath, send_api)
 
     def build_livepatch(self):
         self.rest_manager.build_livepatch()
@@ -99,26 +106,20 @@ class FileAction(object):
         self.full_path = full_path
         pass
 
-    def ungz(self):
+    def ungz(self, temporary):
         """
         Uncompress gzipped configuration
         :return: Uncompressed configuration file path
         """
-        uncompressed_file_fullpath = None
-        path, filename = os.path.split(self.full_path)
-        path_gz_file = os.path.join(path, filename)
-        temporary_path_uncompressed_file = os.path.join('/tmp', filename)
+        path_gz_file = self.full_path
         print('path_gz_file: '+ path_gz_file + ' temporary_path_uncompressed_file: ' +
-              temporary_path_uncompressed_file)
+              temporary.name)
         if not os.path.isdir(path_gz_file):
             with gzip.open(path_gz_file, 'rb') as in_file:
-                s = in_file.read()
+                uncompressed_output = in_file.read()
             # Store uncompressed file
-            uncompressed_file_fullpath = temporary_path_uncompressed_file[:-3]  # remove the filename extension
-            with open(uncompressed_file_fullpath, 'wb') as f:
-                f.write(s)
-            print('working')
-        return uncompressed_file_fullpath
+            temporary.write(uncompressed_output)
+        return temporary
 
     def config_kernel_version(self, uncompressed_config_file):
         """
@@ -126,14 +127,15 @@ class FileAction(object):
         :param uncompressed_config_file:
         :return: kernel version
         """
-        with open(uncompressed_config_file) as f:
+        uncompressed_config_file.seek(0)
+        with uncompressed_config_file as f:
             i = 0
             while i < 2:
                 f.readline()
                 if i == 1:
-                    kernel_line = f.readline()
+                    kernel_line = str(f.readline())
                 i += 1
-        kernel_version_raw = (kernel_line.split(' ')[2])
+        kernel_version_raw = str(kernel_line.split(' ')[2])
         kernel_version = kernel_version_raw.split(('-'))[0]
         return kernel_version
 
