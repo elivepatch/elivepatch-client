@@ -47,8 +47,8 @@ class ManaGer(object):
             'KernelVersion' : self.kernel_version,
             'UUID': self.uuid
         }
-        patch_filename = (os.path.split(patch_fullpath))[1]
-        files = {'patch': (patch_filename, open(patch_fullpath, 'rb'), 'multipart/form-data', {'Expires': '0'}),
+        # Static patch and config filename
+        files = {'patch': ('01.patch', open(patch_fullpath, 'rb'), 'multipart/form-data', {'Expires': '0'}),
                  'config': ('config', open(temporary_config.name, 'rb'), 'multipart/form-data', {'Expires': '0'})}
         print(str(files))
         temporary_config.close()
