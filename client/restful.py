@@ -85,7 +85,11 @@ class ManaGer(object):
                 print('livepatch not found')
                 r.close()
 
-        elivepatch_uuid_dir = os.path.join('..', 'elivepatch-'+ self.uuid)
-        if not os.path.exists(elivepatch_uuid_dir):
-            os.makedirs(elivepatch_uuid_dir)
-        shutil.move("myfile.ko", os.path.join(elivepatch_uuid_dir, 'livepatch.ko'))
+        if os.path.exists('myfile.ko'):
+            elivepatch_uuid_dir = os.path.join('..', 'elivepatch-'+ self.uuid)
+            if not os.path.exists(elivepatch_uuid_dir):
+                os.makedirs(elivepatch_uuid_dir)
+            shutil.move("myfile.ko", os.path.join(elivepatch_uuid_dir, 'livepatch.ko'))
+            print('livepatch saved in ' + elivepatch_uuid_dir + '/ folder')
+        else:
+            print('livepatch not received')
