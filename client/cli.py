@@ -28,7 +28,7 @@ class Main(object):
     def dispatch(self, config):
         print(str(config))
         if config.cve:
-            print('working on cve')
+            print('Kernel security CVE check is not implemented yet')
         elif config.patch:
             current_kernel = Kernel(config.url)
             current_kernel.set_config(config.config)
