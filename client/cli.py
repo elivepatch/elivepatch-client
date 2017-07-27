@@ -7,8 +7,10 @@
 import sys
 
 from elivepatch_client.client.checkers import Kernel
-from elivepatch_client.client.restful import ManaGer
+from elivepatch_client.client import restful
 from elivepatch_client.client.version import VERSION
+from elivepatch_client.client import patch
+
 
 if sys.hexversion >= 0x30200f0:
     ALL_KEYWORD = b'ALL'
@@ -30,6 +32,8 @@ class Main(object):
         if config.cve:
             print('Kernel security CVE check is not implemented yet')
         elif config.patch:
+            patch_manager = patch.ManaGer()
+            patch_manager.list()
             current_kernel = Kernel(config.url)
             current_kernel.set_config(config.config)
             current_kernel.set_patch(config.patch)
@@ -48,5 +52,5 @@ you need at list --patch or --cve')
         pass
 
     def send_config(self):
-        server = ManaGer(self.url)
+        server = restful.ManaGer(self.url)
         pass
