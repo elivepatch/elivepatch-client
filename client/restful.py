@@ -61,9 +61,9 @@ class ManaGer(object):
             response_dict = response.json()
         except requests.exceptions.ConnectionError as e:
             print('connection error: %s' % e)
+            sys.exit(1)
         except:
-            e = sys.exc_info()[0]
-            print( "Error: %s" % e )
+            self.catching_exceptions_exit(self.send_file)
         return response_dict
 
     def build_livepatch(self):
@@ -76,8 +76,7 @@ class ManaGer(object):
             response = requests.post(url, json=payload)
             print(response.json())
         except:
-            e = sys.exc_info()[0]
-            print( "Error build_livepatch: %s" % e )
+            self.catching_exceptions_exit(self.build_livepatch)
 
     def get_livepatch(self):
         from io import BytesIO
@@ -99,8 +98,7 @@ class ManaGer(object):
                     print('livepatch not found')
                     r.close()
         except:
-            e = sys.exc_info()[0]
-            print( "Error get livepatch: %s" % e )
+            self.catching_exceptions_exit(self.get_livepatch)
 
         if os.path.exists('myfile.ko'):
             elivepatch_uuid_dir = os.path.join('..', 'elivepatch-'+ self.uuid)
@@ -110,3 +108,8 @@ class ManaGer(object):
             print('livepatch saved in ' + elivepatch_uuid_dir + '/ folder')
         else:
             print('livepatch not received')
+
+    def catching_exceptions_exit(self, current_function):
+        e = sys.exc_info()
+        print( "Error %s: %s" % (current_function.__name__, str(e)) )
+        sys.exit(1)
