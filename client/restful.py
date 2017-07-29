@@ -8,6 +8,8 @@ import requests
 import os
 import shutil
 
+import sys
+
 
 class ManaGer(object):
     """
@@ -43,6 +45,7 @@ class ManaGer(object):
         # The server is dividing user by UUID
         # UUID is generated with python UUID
         # TODO: add the UUID in the json location instead of headers
+        response_dict = None
         headers = {
             'KernelVersion' : self.kernel_version,
             'UUID': self.uuid
@@ -52,10 +55,16 @@ class ManaGer(object):
                  'config': ('config', open(temporary_config.name, 'rb'), 'multipart/form-data', {'Expires': '0'})}
         print(str(files))
         temporary_config.close()
-        r = requests.post(url, files=files, headers=headers)
-        print('send file: ' + str(r.json()))
-        r_dict = r.json()
-        return r_dict
+        try:
+            response = requests.post(url, files=files, headers=headers)
+            print('send file: ' + str(response.json()))
+            response_dict = response.json()
+        except requests.exceptions.ConnectionError as e:
+            print('connection error: %s' % e)
+        except:
+            e = sys.exc_info()[0]
+            print( "Error: %s" % e )
+        return response_dict
 
     def build_livepatch(self):
         url = self.server_url+'/elivepatch/api/v1.0/build_livepatch'
@@ -63,8 +72,12 @@ class ManaGer(object):
             'KernelVersion': self.kernel_version,
             'UUID' : self.uuid
         }
-        r = requests.post(url, json=payload)
-        print(r.json())
+        try:
+            response = requests.post(url, json=payload)
+            print(response.json())
+        except:
+            e = sys.exc_info()[0]
+            print( "Error build_livepatch: %s" % e )
 
     def get_livepatch(self):
         from io import BytesIO
@@ -73,17 +86,21 @@ class ManaGer(object):
             'KernelVersion': self.kernel_version,
             'UUID' : self.uuid
         }
-        r = requests.get(url, json=payload)
-        if r.status_code == requests.codes.ok:  # livepatch returned ok
-            try:
-                b= BytesIO(r.content)
-                with open('myfile.ko', 'wb') as out:
-                    out.write(r.content)
-                r.close()
-                print(b)
-            except:
-                print('livepatch not found')
-                r.close()
+        try:
+            r = requests.get(url, json=payload)
+            if r.status_code == requests.codes.ok:  # livepatch returned ok
+                try:
+                    b= BytesIO(r.content)
+                    with open('myfile.ko', 'wb') as out:
+                        out.write(r.content)
+                    r.close()
+                    print(b)
+                except:
+                    print('livepatch not found')
+                    r.close()
+        except:
+            e = sys.exc_info()[0]
+            print( "Error get livepatch: %s" % e )
 
         if os.path.exists('myfile.ko'):
             elivepatch_uuid_dir = os.path.join('..', 'elivepatch-'+ self.uuid)
