@@ -25,7 +25,7 @@ class ArgsParser(object):
             "config" : "/proc/config.gz",
         }
         if args.conf_file:
-            config = ConfigParser.SafeConfigParser()
+            config = ConfigParser.ConfigParser()
             config.read([args.conf_file])
             defaults = dict(config.items("Defaults"))
 
