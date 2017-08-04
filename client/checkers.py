@@ -78,7 +78,7 @@ class Kernel(object):
         self.rest_manager.build_livepatch()
 
     def get_livepatch(self):
-        self.rest_manager.get_livepatch()
+        self.rest_manager.get_livepatch(self.patch_fullpath)
 
 
 class CVE(object):

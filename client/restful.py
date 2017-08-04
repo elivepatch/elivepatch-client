@@ -7,7 +7,7 @@
 import requests
 import os
 import shutil
-
+from elivepatch_client.client import patch
 import sys
 
 
@@ -51,8 +51,11 @@ class ManaGer(object):
             'UUID': self.uuid
         }
         # Static patch and config filename
-        files = {'patch': ('01.patch', open(patch_fullpath, 'rb'), 'multipart/form-data', {'Expires': '0'}),
-                 'config': ('config', open(temporary_config.name, 'rb'), 'multipart/form-data', {'Expires': '0'})}
+        patch_01 = open(patch_fullpath, 'rb')
+        files = [('patch', ('01.patch', patch_01, 'multipart/form-data', {'Expires': '0'})),
+        ('patch', ('02.patch', patch_01, 'multipart/form-data', {'Expires': '0'})),
+        ('patch', ('03.patch', patch_01, 'multipart/form-data', {'Expires': '0'})),
+        ('config', ('config', open(temporary_config.name, 'rb'), 'multipart/form-data', {'Expires': '0'}))]
         print(str(files))
         temporary_config.close()
         try:
@@ -62,8 +65,8 @@ class ManaGer(object):
         except requests.exceptions.ConnectionError as e:
             print('connection error: %s' % e)
             sys.exit(1)
-        except:
-            self.catching_exceptions_exit(self.send_file)
+        #except:
+            #self.catching_exceptions_exit(self.send_file)
         return response_dict
 
     def build_livepatch(self):
@@ -78,8 +81,9 @@ class ManaGer(object):
         except:
             self.catching_exceptions_exit(self.build_livepatch)
 
-    def get_livepatch(self):
+    def get_livepatch(self, patch_folder):
         from io import BytesIO
+        patch_manager = patch.ManaGer()
         url = self.server_url+'/elivepatch/api/v1.0/send_livepatch'
         payload = {
             'KernelVersion': self.kernel_version,
@@ -100,12 +104,14 @@ class ManaGer(object):
         except:
             self.catching_exceptions_exit(self.get_livepatch)
 
+        elivepatch_uuid_dir = os.path.join('..', 'elivepatch-'+ self.uuid)
+        livepatch_fulldir = os.path.join(elivepatch_uuid_dir, 'livepatch.ko')
         if os.path.exists('myfile.ko'):
-            elivepatch_uuid_dir = os.path.join('..', 'elivepatch-'+ self.uuid)
             if not os.path.exists(elivepatch_uuid_dir):
                 os.makedirs(elivepatch_uuid_dir)
-            shutil.move("myfile.ko", os.path.join(elivepatch_uuid_dir, 'livepatch.ko'))
+            shutil.copy("myfile.ko", livepatch_fulldir)
             print('livepatch saved in ' + elivepatch_uuid_dir + '/ folder')
+            patch_manager.load(patch_folder, livepatch_fulldir)
         else:
             print('livepatch not received')
 
