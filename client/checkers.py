@@ -27,7 +27,7 @@ class Kernel(object):
     """
     def __init__(self, restserver_url, session_uuid=None):
         self.config_fullpath = ''
-        self.patch_fullpath = ''
+        self.main_patch_fullpath = ''
         self.restserver_url = restserver_url
         self.kernel_version = None
         if session_uuid:
@@ -40,8 +40,8 @@ class Kernel(object):
     def set_config(self, config_fullpath):
         self.config_fullpath = config_fullpath
 
-    def set_patch(self, patch_fullpath):
-        self.patch_fullpath = patch_fullpath
+    def set_main_patch(self, main_patch_fullpath):
+        self.main_patch_fullpath = main_patch_fullpath
 
     def send_files(self):
         """
@@ -70,15 +70,16 @@ class Kernel(object):
         print('debug: kernel version = ' + self.rest_manager.get_kernel_version())
 
         send_api = '/elivepatch/api/v1.0/get_files'
+        incremental_patches= None
 
         # send uncompressed config and patch files fullpath
-        self.rest_manager.send_file(temporary_config, self.patch_fullpath, send_api)
+        self.rest_manager.send_files(temporary_config, self.main_patch_fullpath, incremental_patches, send_api)
 
     def build_livepatch(self):
         self.rest_manager.build_livepatch()
 
     def get_livepatch(self):
-        self.rest_manager.get_livepatch(self.patch_fullpath)
+        self.rest_manager.get_livepatch(self.main_patch_fullpath)
 
 
 class CVE(object):
