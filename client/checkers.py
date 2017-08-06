@@ -57,7 +57,7 @@ class Kernel(object):
             print('gz extension')
             # uncompress the gzip config file
             # return configuration temporary folder
-            temporary_config = f_action.ungz(temporary_config)
+            temporary_config = f_action.decompress_gz(temporary_config)
         else:
             # read already uncompressed configuration
             with open(self.config_fullpath, 'rb') as in_file:
@@ -107,7 +107,7 @@ class FileAction(object):
         self.full_path = full_path
         pass
 
-    def ungz(self, temporary):
+    def decompress_gz(self, temporary):
         """
         Uncompress gzipped configuration
         :return: Uncompressed configuration file path
