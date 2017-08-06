@@ -39,7 +39,7 @@ class ManaGer(object):
         r = requests.get(url)
         print(r.json())
 
-    def send_file(self, temporary_config, patch_fullpath, api):
+    def send_files(self, temporary_config, new_patch_fullpath, incremental_patches, api):
         url = self.server_url+ api
         # we are sending the file and the UUID
         # The server is dividing user by UUID
@@ -51,7 +51,7 @@ class ManaGer(object):
             'UUID': self.uuid
         }
         # Static patch and config filename
-        patch_01 = open(patch_fullpath, 'rb')
+        patch_01 = open(new_patch_fullpath, 'rb')
         files = [('patch', ('01.patch', patch_01, 'multipart/form-data', {'Expires': '0'})),
         ('patch', ('02.patch', patch_01, 'multipart/form-data', {'Expires': '0'})),
         ('patch', ('03.patch', patch_01, 'multipart/form-data', {'Expires': '0'})),
