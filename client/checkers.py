@@ -25,11 +25,11 @@ class Kernel(object):
     """
     Manage kernels files
     """
-    def __init__(self, restserver_url, session_uuid=None):
+    def __init__(self, restserver_url, kernel_version, session_uuid=None):
         self.config_fullpath = ''
         self.main_patch_fullpath = ''
         self.restserver_url = restserver_url
-        self.kernel_version = None
+        self.kernel_version = kernel_version
         if session_uuid:
             self.session_uuid = session_uuid
         else:
@@ -65,7 +65,7 @@ class Kernel(object):
                 # Store uncompressed temporary file
             temporary_config.write(config)
         # Get kernel version from the configuration file header
-        self.kernel_version = f_action.config_kernel_version(temporary_config)
+        #self.kernel_version = f_action.config_kernel_version(temporary_config)
         self.rest_manager.set_kernel_version(self.kernel_version)
         print('debug: kernel version = ' + self.rest_manager.get_kernel_version())
 

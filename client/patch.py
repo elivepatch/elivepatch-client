@@ -1,8 +1,8 @@
-
 import os
 import shutil
 import tempfile
 import subprocess
+
 
 class ManaGer(object):
 
@@ -11,13 +11,29 @@ class ManaGer(object):
         if not os.path.exists(self.tmp_patch_folder):
             os.mkdir(self.tmp_patch_folder)
 
-    def list(self):
+    def list(self, kernel_version):
+        kernel_sources = 'gentoo-sources'
         patch_filename = []
+        # search previous livepatch patch folder
         for (dirpath, dirnames, filenames) in os.walk(self.tmp_patch_folder):
             patch_filename.extend(filenames)
-            break
+        # search eapply_user patches
+        # local basedir=${PORTAGE_CONFIGROOT%/}/etc/portage/patches
+        try:
+            portage_configroot = os.environ['PORTAGE_CONFIGROOT']
+        except:
+            portage_configroot = os.path.join('/etc', 'portage', 'patches')
+        kernel_patch_basedir_PN = os.path.join(portage_configroot, 'sys-kernel',
+                                            kernel_sources)
+        kernel_patch_basedir_P = os.path.join(portage_configroot, 'sys-kernel',
+                                            kernel_sources + '-' + kernel_version)
+        basedir = [kernel_patch_basedir_PN, kernel_patch_basedir_P]
+        for dir in basedir:
+            for (dirpath, dirnames, filenames) in os.walk(dir):
+                patch_filename.extend(filenames)
         print('List of current patches:')
         print(patch_filename)
+        return patch_filename
 
     def load(self, patch_fulldir, livepatch_fulldir):
         try:

@@ -33,8 +33,9 @@ class Main(object):
             print('Kernel security CVE check is not implemented yet')
         elif config.patch:
             patch_manager = patch.ManaGer()
-            patch_manager.list()
-            current_kernel = Kernel(config.url)
+            patch_manager.list(config.kernel_version)
+            print(config.kernel_version)
+            current_kernel = Kernel(config.url, config.kernel_version)
             current_kernel.set_config(config.config)
             current_kernel.set_main_patch(config.patch)
             current_kernel.send_files()
