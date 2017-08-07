@@ -32,12 +32,11 @@ class ManaGer(object):
             for (dirpath, dirnames, filenames) in os.walk(dir):
                 patch_filename.extend(filenames)
         print('List of current patches:')
-        print(patch_filename)
         return patch_filename
 
     def load(self, patch_fulldir, livepatch_fulldir):
         try:
-            command(['sudo','kpatch','load',livepatch_fulldir])
+            _command(['sudo', 'kpatch', 'load', livepatch_fulldir])
             print('patch_fulldir:' + str(patch_fulldir) + ' livepatch_fulldir: '+ str(livepatch_fulldir))
             self.save(patch_fulldir, livepatch_fulldir)
         except:
@@ -56,7 +55,7 @@ class ManaGer(object):
             pass
 
 
-def command(bashCommand, kernel_source_dir=None, env=None):
+def _command(bashCommand, kernel_source_dir=None, env=None):
     """
     Popen override function
 
