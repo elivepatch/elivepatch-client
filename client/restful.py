@@ -51,11 +51,15 @@ class ManaGer(object):
             'UUID': self.uuid
         }
         # Static patch and config filename
-        patch_01 = open(new_patch_fullpath, 'rb')
-        files = [('patch', ('01.patch', patch_01, 'multipart/form-data', {'Expires': '0'})),
-        ('patch', ('02.patch', patch_01, 'multipart/form-data', {'Expires': '0'})),
-        ('patch', ('03.patch', patch_01, 'multipart/form-data', {'Expires': '0'})),
-        ('config', ('config', open(temporary_config.name, 'rb'), 'multipart/form-data', {'Expires': '0'}))]
+        files=[]
+        counter = 0
+        for incremental_patch_fullpath in incremental_patches:
+            read_incremental_patch = open(incremental_patch_fullpath, 'rb')
+            files.append(('patch', (str(counter) + '.patch', read_incremental_patch, 'multipart/form-data', {'Expires': '0'})))
+            read_incremental_patch.close()
+            counter += 1
+        files.append(('main_patch', ('main_patch', open(new_patch_fullpath, 'rb'), 'multipart/form-data', {'Expires': '0'})))
+        files.append(('config', ('config', open(temporary_config.name, 'rb'), 'multipart/form-data', {'Expires': '0'})))
         print(str(files))
         temporary_config.close()
         try:
@@ -79,7 +83,7 @@ class ManaGer(object):
             response = requests.post(url, json=payload)
             print(response.json())
         except:
-            self.catching_exceptions_exit(self.build_livepatch)
+            self._catching_exceptions_exit(self.build_livepatch)
 
     def get_livepatch(self, patch_folder):
         from io import BytesIO
@@ -102,7 +106,7 @@ class ManaGer(object):
                     print('livepatch not found')
                     r.close()
         except:
-            self.catching_exceptions_exit(self.get_livepatch)
+            self._catching_exceptions_exit(self.get_livepatch)
 
         elivepatch_uuid_dir = os.path.join('..', 'elivepatch-'+ self.uuid)
         livepatch_fulldir = os.path.join(elivepatch_uuid_dir, 'livepatch.ko')
@@ -115,7 +119,7 @@ class ManaGer(object):
         else:
             print('livepatch not received')
 
-    def catching_exceptions_exit(self, current_function):
+    def _catching_exceptions_exit(self, current_function):
         e = sys.exc_info()
         print( "Error %s: %s" % (current_function.__name__, str(e)) )
         sys.exit(1)

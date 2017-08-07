@@ -43,7 +43,7 @@ class Kernel(object):
     def set_main_patch(self, main_patch_fullpath):
         self.main_patch_fullpath = main_patch_fullpath
 
-    def send_files(self):
+    def send_files(self, applied_patches_list):
         """
         Send config and patch files
 
@@ -70,10 +70,9 @@ class Kernel(object):
         print('debug: kernel version = ' + self.rest_manager.get_kernel_version())
 
         send_api = '/elivepatch/api/v1.0/get_files'
-        incremental_patches= None
 
         # send uncompressed config and patch files fullpath
-        self.rest_manager.send_files(temporary_config, self.main_patch_fullpath, incremental_patches, send_api)
+        self.rest_manager.send_files(temporary_config, self.main_patch_fullpath, applied_patches_list, send_api)
 
     def build_livepatch(self):
         self.rest_manager.build_livepatch()
