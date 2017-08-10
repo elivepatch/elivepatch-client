@@ -65,7 +65,7 @@ class Kernel(object):
                 # Store uncompressed temporary file
             temporary_config.write(config)
         # Get kernel version from the configuration file header
-        #self.kernel_version = f_action.config_kernel_version(temporary_config)
+        # self.kernel_version = f_action.config_kernel_version(temporary_config)
         self.rest_manager.set_kernel_version(self.kernel_version)
         print('debug: kernel version = ' + self.rest_manager.get_kernel_version())
 
