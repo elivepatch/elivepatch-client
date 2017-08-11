@@ -53,24 +53,26 @@ class ManaGer(object):
         # Static patch and config filename
         files=[]
         counter = 0
+        print('incremental_patches: '+str(incremental_patches))
         for incremental_patch_fullpath in incremental_patches:
-            read_incremental_patch = open(incremental_patch_fullpath, 'rb')
-            files.append(('patch', (str(counter) + '.patch', read_incremental_patch, 'multipart/form-data', {'Expires': '0'})))
-            read_incremental_patch.close()
-            counter += 1
-        files.append(('main_patch', ('main_patch', open(new_patch_fullpath, 'rb'), 'multipart/form-data', {'Expires': '0'})))
+            if incremental_patch_fullpath.endswith('.patch'):
+                # TODO: we need to close what we open
+                read_incremental_patch = open(incremental_patch_fullpath, 'rb')
+                files.append(('patch', (str(counter) + '.patch', read_incremental_patch, 'multipart/form-data', {'Expires': '0'})))
+                counter += 1
+        files.append(('main_patch', ('main.patch', open(new_patch_fullpath, 'rb'), 'multipart/form-data', {'Expires': '0'})))
         files.append(('config', ('config', open(temporary_config.name, 'rb'), 'multipart/form-data', {'Expires': '0'})))
         print(str(files))
-        temporary_config.close()
         try:
             response = requests.post(url, files=files, headers=headers)
             print('send file: ' + str(response.json()))
             response_dict = response.json()
         except requests.exceptions.ConnectionError as e:
             print('connection error: %s' % e)
-            sys.exit(1)
-        #except:
-            #self.catching_exceptions_exit(self.send_file)
+            temporary_config.close()
+        except:
+            self._catching_exceptions_exit(self.send_files)
+        temporary_config.close()
         return response_dict
 
     def build_livepatch(self):
