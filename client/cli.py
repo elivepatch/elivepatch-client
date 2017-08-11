@@ -39,7 +39,6 @@ class Main(object):
             current_kernel.set_config(config.config)
             current_kernel.set_main_patch(config.patch)
             current_kernel.send_files(applied_patches_list)
-            current_kernel.build_livepatch()
             current_kernel.get_livepatch()
         elif config.version:
             print('elivepatch version: '+str(VERSION))
