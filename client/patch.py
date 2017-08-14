@@ -12,6 +12,11 @@ class ManaGer(object):
             os.mkdir(self.tmp_patch_folder)
 
     def list(self, kernel_version):
+        """
+        Listing incremental patches
+        :param kernel_version: String  with kernel version
+        :return: list of incremental patch
+        """
         kernel_sources = 'gentoo-sources'
         patch_filename = []
         # search previous livepatch patch folder
@@ -47,22 +52,32 @@ class ManaGer(object):
         return patch_filename
 
     def load(self, patch_fulldir, livepatch_fulldir):
+        """
+        kpatch load live patch into the client machine working kernel
+        :param patch_fulldir: String patch full directory
+        :param livepatch_fulldir: String live patch full directory
+        """
         try:
             _command(['sudo', 'kpatch', 'load', livepatch_fulldir])
             print('patch_fulldir:' + str(patch_fulldir) + ' livepatch_fulldir: '+ str(livepatch_fulldir))
-            self.save(patch_fulldir, livepatch_fulldir)
+            self._save(patch_fulldir, livepatch_fulldir)
         except:
             print('failed to load the livepatch')
 
-    def save(self, patch, livepatch):
+    def _save(self, patch_fulldir, livepatch_fulldir):
+        """
+        Save main patch and live patch
+        :param patch_fulldir: String patch full directory
+        :param livepatch_fulldir: String live patch full directory
+        """
         i = 0
         while os.path.exists(os.path.join(self.tmp_patch_folder, "elivepatch_%s" % i)):
             i += 1
-        path_folder = os.path.join(self.tmp_patch_folder, "elivepatch_%s" % i)
-        os.mkdir(path_folder)
-        shutil.copy(patch, os.path.join(path_folder, "elivepatch.patch"))
+        incremental_patch_archive_directory = os.path.join(self.tmp_patch_folder, "elivepatch_%s" % i)
+        os.mkdir(incremental_patch_archive_directory)
+        shutil.copy(patch_fulldir, os.path.join(incremental_patch_archive_directory, "elivepatch.patch"))
         try:
-            shutil.copy(livepatch, os.path.join(path_folder, "elivepatch.ko"))
+            shutil.copy(livepatch_fulldir, os.path.join(incremental_patch_archive_directory, "elivepatch.ko"))
         except:
             pass
 
