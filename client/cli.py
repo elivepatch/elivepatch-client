@@ -5,12 +5,13 @@
 # Distributed under the terms of the GNU General Public License v2 or later
 
 import sys
+import os
 
 from elivepatch_client.client.checkers import Kernel
 from elivepatch_client.client import restful
 from elivepatch_client.client.version import VERSION
 from elivepatch_client.client import patch
-
+from elivepatch_client.client import security
 
 if sys.hexversion >= 0x30200f0:
     ALL_KEYWORD = b'ALL'
@@ -30,7 +31,18 @@ class Main(object):
     def dispatch(self, config):
         print(str(config))
         if config.cve:
-            print('Kernel security CVE check is not implemented yet')
+            patch_manager = patch.ManaGer()
+            applied_patches_list = patch_manager.list(config.kernel_version)
+            print(applied_patches_list)
+            cve_repository = security.CVE()
+            if not os.path.isdir("/tmp/kernel_cve"):
+                print("Downloading the CVE repository...")
+                cve_repository.download()
+            else:
+                print("CVE repository already present.")
+                print("updating...")
+                # TODO: update repository
+            cve_repository.cve_git_id()
         elif config.patch:
             patch_manager = patch.ManaGer()
             applied_patches_list = patch_manager.list(config.kernel_version)

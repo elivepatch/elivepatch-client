@@ -11,7 +11,6 @@ import tempfile
 import os
 import os.path
 import re
-from git import Repo
 
 from elivepatch_client.client import restful
 
@@ -81,23 +80,6 @@ class Kernel(object):
         self.rest_manager.get_livepatch(self.main_patch_fullpath)
 
 
-class CVE(object):
-    """
-    Check the kernel against a CVE repository
-    """
-    def __init__(self):
-        self.git_url = "https://github.com/nluedtke/linux_kernel_cves"
-        self.repo_dir = "/tmp/kernel_cve/"
-        pass
-
-    def download(self):
-        Repo.clone_from(self.git_url, self.repo_dir)
-
-    def set_repo(self, git_url, repo_dir):
-        self.git_url = git_url
-        self.repo_dir = repo_dir
-
-
 class FileAction(object):
     """
     Work with files
@@ -120,22 +102,3 @@ class FileAction(object):
             # Store uncompressed file
             temporary.write(uncompressed_output)
         return temporary
-
-    def config_kernel_version(self, uncompressed_config_file):
-        """
-        Find the kernel version from where the configuration as been generated
-        :param uncompressed_config_file:
-        :return: kernel version
-        """
-        uncompressed_config_file.seek(0)
-        with uncompressed_config_file as f:
-            i = 0
-            while i < 2:
-                f.readline()
-                if i == 1:
-                    kernel_line = str(f.readline())
-                i += 1
-        kernel_version_raw = str(kernel_line.split(' ')[2])
-        kernel_version = kernel_version_raw.split(('-'))[0]
-        return kernel_version
-
