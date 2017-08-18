@@ -73,9 +73,6 @@ class Kernel(object):
         # send uncompressed config and patch files fullpath
         self.rest_manager.send_files(temporary_config, self.main_patch_fullpath, incremental_patches_list, send_api)
 
-    def build_livepatch(self):
-        self.rest_manager.build_livepatch()
-
     def get_livepatch(self):
         self.rest_manager.get_livepatch(self.main_patch_fullpath)
 

@@ -75,18 +75,6 @@ class ManaGer(object):
         temporary_config.close()
         return response_dict
 
-    def build_livepatch(self):
-        url = self.server_url+'/elivepatch/api/v1.0/build_livepatch'
-        payload = {
-            'KernelVersion': self.kernel_version,
-            'UUID' : self.uuid
-        }
-        try:
-            response = requests.post(url, json=payload)
-            print(response.json())
-        except:
-            self._catching_exceptions_exit(self.build_livepatch)
-
     def get_livepatch(self, patch_folder):
         from io import BytesIO
         patch_manager = patch.ManaGer()
