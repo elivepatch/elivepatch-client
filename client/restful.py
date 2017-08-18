@@ -9,6 +9,7 @@ import os
 import shutil
 from elivepatch_client.client import patch
 import sys
+from io import BytesIO
 
 
 class ManaGer(object):
@@ -35,11 +36,22 @@ class ManaGer(object):
         return self.uuid
 
     def version(self):
+        """
+        Function for as the server version and print on screen
+        """
         url = self.server_url + '/elivepatch/api/v1.0/agent'
         r = requests.get(url)
         print(r.json())
 
     def send_files(self, temporary_config, new_patch_fullpath, incremental_patches, api):
+        """
+        Function for send files and build live patch (server side)
+        :param temporary_config: configuration file full path
+        :param new_patch_fullpath: main patch full path
+        :param incremental_patches: List with incremental patches paths
+        :param api: RESTFul server path
+        :return: json with response
+        """
         url = self.server_url+ api
         # we are sending the file and the UUID
         # The server is dividing user by UUID
@@ -76,7 +88,10 @@ class ManaGer(object):
         return response_dict
 
     def get_livepatch(self, patch_folder):
-        from io import BytesIO
+        """
+        Save the patch in the incremental patches folder and install the livepatch
+        :param patch_folder: Main patch that will be saved in the incremental patches folder.
+        """
         patch_manager = patch.ManaGer()
         url = self.server_url+'/elivepatch/api/v1.0/send_livepatch'
         payload = {
