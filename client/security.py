@@ -48,8 +48,8 @@ class CVE(object):
         if not os.path.exists(self.cve_patches_dir):
             os.mkdir(self.cve_patches_dir)
         for cve_list in cve_2d_list:
-            print(cve_list)
-            print([ii for n,ii in enumerate(cve_list) if ii not in cve_list[:n]])
+            # Remove duplicated cve_id from the cve list for not add the same patch
+            cve_list = [ii for n,ii in enumerate(cve_list) if ii not in cve_list[:n]]
             for cve_id in cve_list:
                 self.download_cve_patch(cve_id, str(patch_index))
                 patch_index +=1
