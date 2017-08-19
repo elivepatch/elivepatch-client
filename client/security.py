@@ -44,6 +44,7 @@ class CVE(object):
             if int(version) > revision_version:
                 cve_2d_list.append(self.cve_id(major_version, minor_version, version))
 
+        cve_outfile_list = []
         patch_index = 0
         if not os.path.exists(self.cve_patches_dir):
             os.mkdir(self.cve_patches_dir)
@@ -51,16 +52,19 @@ class CVE(object):
             # Remove duplicated cve_id from the cve list for not add the same patch
             cve_list = [ii for n,ii in enumerate(cve_list) if ii not in cve_list[:n]]
             for cve_id in cve_list:
-                self.download_cve_patch(cve_id, str(patch_index))
+                cve_outfile = self.download_cve_patch(cve_id, str(patch_index))
+                cve_outfile_list.append([cve_outfile[0], cve_outfile[1].name])
                 patch_index +=1
+        return cve_outfile_list
 
     def download_cve_patch(self, cve_id, patch_index):
         file_name= self.cve_patches_dir + patch_index + '.patch'
 
         # Download the file from `url` and save it locally under `file_name`:
-        with request.urlopen('https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git/patch/?id=' + cve_id) as response, \
+        with request.urlopen('https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git/patch/?id=' + cve_id[1]) as response, \
                 open(file_name, 'wb') as out_file:
             shutil.copyfileobj(response, out_file)
+        return [cve_id[0],out_file]
 
     def cve_id(self, major_version, minor_version, revision_version):
         security_file = open("/tmp/kernel_cve/"+str(major_version)+"."+str(minor_version)+
@@ -75,7 +79,7 @@ class CVE(object):
                     ":") in excluded_line:
                 for included_line in security_file:
                     if not "\n" is included_line:
-                        git_security_id.append(included_line.strip().split(' ')[1])
+                        git_security_id.append([included_line.strip().split(' ')[0].replace(':',''),included_line.strip().split(' ')[1]])
                     else:
                         # debug
                         # print('got cve for '+str(major_version)+

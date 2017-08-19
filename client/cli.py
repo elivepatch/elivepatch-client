@@ -42,7 +42,14 @@ class Main(object):
                 print("CVE repository already present.")
                 print("updating...")
                 # TODO: update repository
-            cve_repository.cve_git_id()
+            cve_patch_list = cve_repository.cve_git_id()
+            for cve_id, cve_patch in cve_patch_list:
+                print(cve_id, cve_patch)
+                current_kernel = Kernel(config.url, config.kernel_version)
+                current_kernel.set_config(config.config)
+                current_kernel.set_main_patch(cve_patch)
+                current_kernel.send_files(applied_patches_list)
+                current_kernel.get_livepatch()
         elif config.patch:
             patch_manager = patch.ManaGer()
             applied_patches_list = patch_manager.list(config.kernel_version)
