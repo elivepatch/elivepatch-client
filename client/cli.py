@@ -58,13 +58,6 @@ class Main(object):
             print('--help for help\n\
 you need at list --patch or --cve')
 
-    def __call__(self):
-        pass
-
-    def send_config(self):
-        server = restful.ManaGer(self.url)
-        pass
-
 
 def livepatch(url, kernel_version, config, main_patch, incremental_patch_names_list):
     """
