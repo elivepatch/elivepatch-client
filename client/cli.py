@@ -6,6 +6,7 @@
 
 import sys
 import os
+import shelve
 
 from elivepatch_client.client.checkers import Kernel
 from elivepatch_client.client import restful
@@ -42,10 +43,28 @@ class Main(object):
                 print("CVE repository already present.")
                 print("updating...")
                 # TODO: update repository
+            if config.clear:
+                os.remove('cve_ids')
             cve_patch_list = cve_repository.cve_git_id()
-            for cve_id, cve_patch in cve_patch_list:
-                print(cve_id, cve_patch)
+            new_cve_patch_list = cve_patch_list
+            cve_previous_patch_list = []
+            # checking if we have a previous cve_ids list
+            if os.path.isfile('cve_ids'):
+                cve_db = shelve.open('cve_ids')
+                for i in (list(cve_db.keys())):
+                    cve_previous_patch_list.append([i, cve_db[i]])
+                cve_db.close()
+                new_cve_patch_list = []
+                # checking if there is any new cve patch in the repository
+                for cve_patch_id in cve_patch_list:
+                    if cve_patch_id not in cve_previous_patch_list:
+                        new_cve_patch_list.append(cve_patch_id)
+            # converting new cve to live patch
+            for cve_id, cve_patch in new_cve_patch_list:
+                with shelve.open('cve_ids') as cve_db:
+                    cve_db[cve_id] = cve_patch
                 livepatch(config.url, config.kernel_version, config.config, cve_patch, applied_patches_list)
+            print(new_cve_patch_list)
         elif config.patch:
             patch_manager = patch.ManaGer()
             applied_patches_list = patch_manager.list(config.kernel_version)
@@ -57,6 +76,9 @@ class Main(object):
         else:
             print('--help for help\n\
 you need at list --patch or --cve')
+
+    def __call__(self):
+        pass
 
 
 def livepatch(url, kernel_version, config, main_patch, incremental_patch_names_list):

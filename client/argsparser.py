@@ -43,6 +43,7 @@ class ArgsParser(object):
         parser.add_argument("-p","--patch", help="patch to convert.")
         parser.add_argument("-k","--config", help="set kernel config file manually.")
         parser.add_argument("-a","--kernel_version", help="set kernel version manually.")
+        parser.add_argument("-l","--clear", action='store_true', help="Clear the already installed cve db (Use with caution!).")
         parser.add_argument("-u","--url", help="set elivepatch server url.")
         parser.add_argument("-d","--debug", action='store_true', help="set the debug option.")
         parser.add_argument("-v","--version", action='store_true', help="show the version.")
