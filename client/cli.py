@@ -45,27 +45,18 @@ class Main(object):
             cve_patch_list = cve_repository.cve_git_id()
             for cve_id, cve_patch in cve_patch_list:
                 print(cve_id, cve_patch)
-                current_kernel = Kernel(config.url, config.kernel_version)
-                current_kernel.set_config(config.config)
-                current_kernel.set_main_patch(cve_patch)
-                current_kernel.send_files(applied_patches_list)
-                current_kernel.get_livepatch()
+                livepatch(config.url, config.kernel_version, config.config, cve_patch, applied_patches_list)
         elif config.patch:
             patch_manager = patch.ManaGer()
             applied_patches_list = patch_manager.list(config.kernel_version)
             print(applied_patches_list)
-            current_kernel = Kernel(config.url, config.kernel_version)
-            current_kernel.set_config(config.config)
-            current_kernel.set_main_patch(config.patch)
-            current_kernel.send_files(applied_patches_list)
-            current_kernel.get_livepatch()
+            livepatch(config.url, config.kernel_version, config.config, config.patch, applied_patches_list)
+
         elif config.version:
             print('elivepatch version: '+str(VERSION))
         else:
             print('--help for help\n\
 you need at list --patch or --cve')
-
-
 
     def __call__(self):
         pass
@@ -73,3 +64,20 @@ you need at list --patch or --cve')
     def send_config(self):
         server = restful.ManaGer(self.url)
         pass
+
+
+def livepatch(url, kernel_version, config, main_patch, incremental_patch_names_list):
+    """
+    Create, get and install the live patch
+
+    :param url: url of the elivepatch_server
+    :param kernel_version: kernel version of the system to be live patched
+    :param config: configuration file of the kernel we are going to live patch (DEBUG_INFO is not needed here)
+    :param main_patch: the main patch that will be converted into a live patch kernel module
+    :param incremental_patch_names_list: list of patch path that are already used in the kernel
+    """
+    current_kernel = Kernel(url, kernel_version)
+    current_kernel.set_config(config)
+    current_kernel.set_main_patch(main_patch)
+    current_kernel.send_files(incremental_patch_names_list)
+    current_kernel.get_livepatch()
