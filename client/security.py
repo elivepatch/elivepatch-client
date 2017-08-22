@@ -96,4 +96,3 @@ def _current_kernel_version():
     minor_version = int(kernel_version.split('.')[1])
     revision_version = int((kernel_version.split('.')[2]).split('-')[0])
     return major_version, minor_version, revision_version
-
