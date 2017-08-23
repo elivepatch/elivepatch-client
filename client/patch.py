@@ -19,15 +19,6 @@ class ManaGer(object):
         """
         kernel_sources = 'gentoo-sources'
         patch_filename = []
-        # search previous livepatch patch folder
-        for (dirpath, dirnames, filenames) in os.walk(self.tmp_patch_folder):
-            if filenames and not dirnames:
-                for filename in filenames:
-                    if filename.endswith('.patch'):
-                        print('dirpath: '+str(dirpath),'filename: '+str(filename))
-                        incremental_patch_fullpath = os.path.join(dirpath, filename)
-                        print(incremental_patch_fullpath)
-                        patch_filename.append(incremental_patch_fullpath)
         # search eapply_user patches
         # local basedir=${PORTAGE_CONFIGROOT%/}/etc/portage/patches
         try:
@@ -48,6 +39,15 @@ class ManaGer(object):
                             incremental_patch_fullpath = os.path.join(dirpath, filename)
                             print(incremental_patch_fullpath)
                             patch_filename.append(incremental_patch_fullpath)
+        # search previous livepatch patch folder
+        for (dirpath, dirnames, filenames) in os.walk(self.tmp_patch_folder):
+            if filenames and not dirnames:
+                for filename in filenames:
+                    if filename.endswith('.patch'):
+                        print('dirpath: '+str(dirpath),'filename: '+str(filename))
+                        incremental_patch_fullpath = os.path.join(dirpath, filename)
+                        print(incremental_patch_fullpath)
+                        patch_filename.append(incremental_patch_fullpath)
         print('List of current patches:')
         return patch_filename
 
