@@ -8,11 +8,11 @@ import sys
 import os
 import shelve
 
-from elivepatch_client.client.checkers import Kernel
-from elivepatch_client.client import restful
-from elivepatch_client.client.version import VERSION
-from elivepatch_client.client import patch
-from elivepatch_client.client import security
+from client.checkers import Kernel
+from client import restful
+from client.version import VERSION
+from client import patch
+from client import security
 
 if sys.hexversion >= 0x30200f0:
     ALL_KEYWORD = b'ALL'
