@@ -24,7 +24,7 @@ class CVE(object):
     def cve_git_id(self):
         major_version, minor_version, revision_version = _current_kernel_version()
         major_version, minor_version, revision_version = 4,9,25
-        security_file = open("/tmp/kernel_cve/"+str(major_version)+"."+str(minor_version)+
+        security_file = open(self.repo_dir+str(major_version)+"."+str(minor_version)+
                              "/"+str(major_version)+"."+str(minor_version)+"_security.txt", "r")
         security_versions = []
         for line in security_file:
@@ -67,7 +67,7 @@ class CVE(object):
         return [cve_id[0],out_file]
 
     def cve_id(self, major_version, minor_version, revision_version):
-        security_file = open("/tmp/kernel_cve/"+str(major_version)+"."+str(minor_version)+
+        security_file = open(self.repo_dir+str(major_version)+"."+str(minor_version)+
                              "/"+str(major_version)+"."+str(minor_version)+"_security.txt", "r")
 
         git_security_id = []
