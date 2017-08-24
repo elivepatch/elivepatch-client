@@ -93,7 +93,7 @@ class FileAction(object):
         path_gz_file = self.full_path
         print('path_gz_file: '+ path_gz_file + ' temporary_path_uncompressed_file: ' +
               temporary.name)
-        if not os.path.isdir(path_gz_file):
+        if os.path.isfile(path_gz_file):
             with gzip.open(path_gz_file, 'rb') as in_file:
                 uncompressed_output = in_file.read()
             # Store uncompressed file
