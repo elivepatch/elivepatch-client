@@ -46,7 +46,7 @@ class Main(object):
             if config.clear:
                 if os.path.isfile('cve_ids'):
                     os.remove('cve_ids')
-            cve_patch_list = cve_repository.cve_git_id()
+            cve_patch_list = cve_repository.cve_git_id(config.kernel_version)
             new_cve_patch_list = cve_patch_list
             cve_previous_patch_list = []
             # checking if we have a previous cve_ids list

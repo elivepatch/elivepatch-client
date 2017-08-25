@@ -21,8 +21,9 @@ class CVE(object):
         self.git_url = git_url
         self.repo_dir = repo_dir
 
-    def cve_git_id(self):
-        major_version, minor_version, revision_version = _current_kernel_version()
+    def cve_git_id(self, kernel_version):
+        major_version, minor_version, revision_version = kernel_version.split('.')
+        print(major_version, minor_version, revision_version)
         security_file = open(self.repo_dir+str(major_version)+"."+str(minor_version)+
                              "/"+str(major_version)+"."+str(minor_version)+"_security.txt", "r")
         security_versions = []
@@ -40,7 +41,7 @@ class CVE(object):
 
         cve_2d_list = []
         for version in security_versions:
-            if int(version) > revision_version:
+            if int(version) > int(revision_version):
                 cve_2d_list.append(self.cve_id(major_version, minor_version, version))
 
         cve_outfile_list = []
@@ -88,10 +89,3 @@ class CVE(object):
         security_file.close()
         return git_security_id
 
-
-def _current_kernel_version():
-    kernel_version = os.uname()[2]
-    major_version = int(kernel_version.split('.')[0])
-    minor_version = int(kernel_version.split('.')[1])
-    revision_version = int((kernel_version.split('.')[2]).split('-')[0])
-    return major_version, minor_version, revision_version
