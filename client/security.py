@@ -23,7 +23,6 @@ class CVE(object):
 
     def cve_git_id(self):
         major_version, minor_version, revision_version = _current_kernel_version()
-        major_version, minor_version, revision_version = 4,9,25
         security_file = open(self.repo_dir+str(major_version)+"."+str(minor_version)+
                              "/"+str(major_version)+"."+str(minor_version)+"_security.txt", "r")
         security_versions = []
