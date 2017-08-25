@@ -44,7 +44,8 @@ class Main(object):
                 print("updating...")
                 # TODO: update repository
             if config.clear:
-                os.remove('cve_ids')
+                if os.path.isfile('cve_ids'):
+                    os.remove('cve_ids')
             cve_patch_list = cve_repository.cve_git_id()
             new_cve_patch_list = cve_patch_list
             cve_previous_patch_list = []
