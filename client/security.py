@@ -51,7 +51,7 @@ class CVE(object):
             # Remove duplicated cve_id from the cve list for not add the same patch
             cve_list = [ii for n,ii in enumerate(cve_list) if ii not in cve_list[:n]]
             for cve_id in cve_list:
-                cve_outfile = self.download_cve_patch(cve_id, str(patch_index))
+                cve_outfile = self.download_cve_patch(cve_id, str(patch_index).zfill(5))
                 cve_outfile_list.append([cve_outfile[0], cve_outfile[1].name])
                 patch_index +=1
         return cve_outfile_list

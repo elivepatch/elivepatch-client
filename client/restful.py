@@ -70,7 +70,7 @@ class ManaGer(object):
             if incremental_patch_fullpath.endswith('.patch'):
                 # TODO: we need to close what we open
                 read_incremental_patch = open(incremental_patch_fullpath, 'rb')
-                files.append(('patch', (str(counter) + '.patch', read_incremental_patch, 'multipart/form-data', {'Expires': '0'})))
+                files.append(('patch', (str(counter).zfill(5) + '.patch', read_incremental_patch, 'multipart/form-data', {'Expires': '0'})))
                 counter += 1
         files.append(('main_patch', ('main.patch', open(new_patch_fullpath, 'rb'), 'multipart/form-data', {'Expires': '0'})))
         files.append(('config', ('config', open(temporary_config.name, 'rb'), 'multipart/form-data', {'Expires': '0'})))
