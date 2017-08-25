@@ -53,7 +53,7 @@ class ManaGer(object):
                         print(incremental_patch_fullpath)
                         previous_patches.append(incremental_patch_fullpath)
         # os.walk() walks in random order, perform a lexical sort
-        previous_patches = sorted(previous_patches, key=lambda elive: int(elive.replace('.patch','').split('_')[1]))
+        previous_patches = sorted(previous_patches, key=lambda elive: int(elive.replace('/elivepatch.patch','').split('_')[1]))
 
         # Append the previous patches to the eapply_user patches list
         patch_filename.extend(previous_patches)
