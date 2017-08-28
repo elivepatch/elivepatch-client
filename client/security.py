@@ -81,10 +81,6 @@ class CVE(object):
                     if not "\n" is included_line:
                         git_security_id.append([included_line.strip().split(' ')[0].replace(':',''),included_line.strip().split(' ')[1]])
                     else:
-                        # debug
-                        # print('got cve for '+str(major_version)+
-                        #       "."+str(minor_version)+
-                        #       "."+str(revision_version))
                         break
         security_file.close()
         return git_security_id
