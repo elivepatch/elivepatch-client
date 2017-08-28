@@ -13,6 +13,7 @@ from client import restful
 from client.version import VERSION
 from client import patch
 from client import security
+import tempfile
 
 if sys.hexversion >= 0x30200f0:
     ALL_KEYWORD = b'ALL'
@@ -64,7 +65,16 @@ class Main(object):
             for cve_id, cve_patch in new_cve_patch_list:
                 with shelve.open('cve_ids') as cve_db:
                     cve_db[cve_id] = cve_patch
-                livepatch(config.url, config.kernel_version, config.config, cve_patch, applied_patches_list)
+
+            print('merging cve patches...')
+            with tempfile.NamedTemporaryFile(dir='/tmp/', delete=False) as portage_tmpdir:
+                print('portage_tmpdir: '+portage_tmpdir.name)
+                for cve_id, cve_file in cve_patch_list:
+                    print(cve_file)
+                    with open(cve_file,'rb+') as infile:
+                        portage_tmpdir.write(infile.read())
+                livepatch(config.url, config.kernel_version, config.config, portage_tmpdir.name, applied_patches_list)
+
             print(new_cve_patch_list)
         elif config.patch:
             patch_manager = patch.ManaGer()
