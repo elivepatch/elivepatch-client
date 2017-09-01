@@ -1,4 +1,4 @@
-from git import Repo
+import git
 import os
 import urllib.request as request
 import shutil
@@ -14,8 +14,12 @@ class CVE(object):
         self.cve_patches_dir = "/tmp/patches_cve/"
         pass
 
-    def download(self):
-        Repo.clone_from(self.git_url, self.repo_dir)
+    def git_download(self):
+        git.Repo.clone_from(self.git_url, self.repo_dir)
+
+    def git_update(self):
+        cve_repository = git.cmd.Git(self.repo_dir)
+        cve_repository.pull()
 
     def set_repo(self, git_url, repo_dir):
         self.git_url = git_url

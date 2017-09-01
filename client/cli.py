@@ -39,11 +39,11 @@ class Main(object):
             cve_repository = security.CVE()
             if not os.path.isdir("/tmp/kernel_cve"):
                 print("Downloading the CVE repository...")
-                cve_repository.download()
+                cve_repository.git_download()
             else:
                 print("CVE repository already present.")
                 print("updating...")
-                # TODO: update repository
+                cve_repository.git_update()
             if config.clear:
                 if os.path.isfile('cve_ids'):
                     os.remove('cve_ids')
@@ -70,7 +70,6 @@ class Main(object):
             with tempfile.NamedTemporaryFile(dir='/tmp/', delete=False) as portage_tmpdir:
                 print('portage_tmpdir: '+portage_tmpdir.name)
                 for cve_id, cve_file in cve_patch_list:
-                    print(cve_file)
                     with open(cve_file,'rb+') as infile:
                         portage_tmpdir.write(infile.read())
                 livepatch(config.url, config.kernel_version, config.config, portage_tmpdir.name, applied_patches_list)
