@@ -2,9 +2,9 @@ from setuptools import setup, find_packages
 
 setup(
     name='elivepatch-client',
-    version='0.01',
+    version='0.0.1',
     description='Distributed live patch client and automatic kernel live patch for kernel CVE',
-    url='https://wiki.gentoo.org/wiki/User:Aliceinwire/elivepatch, ' +\
+    url='https://wiki.gentoo.org/wiki/Elivepatch, ' +\
         'https://github.com/aliceinwire/elivepatch-client',
 
     classifiers=[
