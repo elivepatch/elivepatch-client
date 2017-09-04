@@ -12,7 +12,7 @@ import os
 import os.path
 import re
 
-from client import restful
+from elivepatch_client import restful
 
 
 def id_generate_uuid():

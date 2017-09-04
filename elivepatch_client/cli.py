@@ -8,11 +8,11 @@ import sys
 import os
 import shelve
 
-from client.checkers import Kernel
-from client import restful
-from client.version import VERSION
-from client import patch
-from client import security
+from elivepatch_client.checkers import Kernel
+from elivepatch_client import restful
+from elivepatch_client.version import VERSION
+from elivepatch_client import patch
+from elivepatch_client import security
 import tempfile
 
 if sys.hexversion >= 0x30200f0:

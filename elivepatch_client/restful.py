@@ -7,7 +7,7 @@
 import requests
 import os
 import shutil
-from client import patch
+from elivepatch_client import patch
 import sys
 from io import BytesIO
 

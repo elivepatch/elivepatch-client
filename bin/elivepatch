@@ -11,8 +11,8 @@ __version__ = "0.0.1"
 # Dependencies
 #
 #-------------------------------------------------------------------------------
-from   client.argsparser     import ArgsParser
-from   client.cli     import Main
+from   elivepatch_client.argsparser     import ArgsParser
+from   elivepatch_client.cli     import Main
 #import pdb; pdb.set_trace()
 import os
 
