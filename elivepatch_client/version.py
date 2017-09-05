@@ -7,7 +7,7 @@
 
 from __future__ import unicode_literals
 
-VERSION = '0.0.1'
+VERSION = '0.1'
 
 if __name__ == '__main__':
     print(VERSION)
