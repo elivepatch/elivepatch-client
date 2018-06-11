@@ -8,6 +8,7 @@ import requests
 import os
 import shutil
 from elivepatch_client import patch
+import tempfile
 import sys
 from io import BytesIO
 
@@ -113,16 +114,16 @@ class ManaGer(object):
         except:
             self._catching_exceptions_exit(self.get_livepatch)
 
-        elivepatch_uuid_dir = os.path.join('..', 'elivepatch-'+ self.uuid)
-        livepatch_fulldir = os.path.join(elivepatch_uuid_dir, 'livepatch.ko')
-        if os.path.exists('myfile.ko'):
-            if not os.path.exists(elivepatch_uuid_dir):
-                os.makedirs(elivepatch_uuid_dir)
-            shutil.copy("myfile.ko", livepatch_fulldir)
-            print('livepatch saved in ' + elivepatch_uuid_dir + '/ folder')
-            patch_manager.load(patch_folder, livepatch_fulldir)
-        else:
-            print('livepatch not received')
+        with tempfile.TemporaryDirectory() as elivepatch_uuid_dir:
+            livepatch_fulldir = os.path.join(elivepatch_uuid_dir, 'livepatch.ko')
+            if os.path.exists('myfile.ko'):
+                if not os.path.exists(elivepatch_uuid_dir):
+                    os.makedirs(elivepatch_uuid_dir)
+                shutil.copy("myfile.ko", livepatch_fulldir)
+                print('livepatch saved in ' + elivepatch_uuid_dir + '/ folder')
+                patch_manager.load(patch_folder, livepatch_fulldir)
+            else:
+                print('livepatch not received')
 
     def _catching_exceptions_exit(self, current_function):
         e = sys.exc_info()
