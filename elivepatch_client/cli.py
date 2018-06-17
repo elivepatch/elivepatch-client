@@ -13,6 +13,7 @@ from elivepatch_client import restful
 from elivepatch_client.version import VERSION
 from elivepatch_client import patch
 from elivepatch_client import security
+from elivepatch_client import log
 import tempfile
 
 if sys.hexversion >= 0x30200f0:
@@ -28,21 +29,25 @@ class Main(object):
 
     def __init__(self, argparser):
         config = argparser.get_arg()
+        # Initialize the logger before anything else.
+        config.color = True
+        log.setup_logging(config.debug, output=config.log_output, debug=config.debug,
+color=config.color)
         self.dispatch(config)
 
     def dispatch(self, config):
-        print(str(config))
+        log.debug(str(config))
         if config.cve:
             patch_manager = patch.ManaGer()
             applied_patches_list = patch_manager.list(config.kernel_version)
-            print(applied_patches_list)
+            log.notice(applied_patches_list)
             cve_repository = security.CVE()
             if not os.path.isdir("/tmp/kernel_cve"):
-                print("Downloading the CVE repository...")
+                log.notice("Downloading the CVE repository...")
                 cve_repository.git_download()
             else:
-                print("CVE repository already present.")
-                print("updating...")
+                log.notice("CVE repository already present.")
+                log.notice("updating...")
                 cve_repository.git_update()
             if config.clear:
                 if os.path.isfile('cve_ids'):
@@ -66,23 +71,23 @@ class Main(object):
                 with shelve.open('cve_ids') as cve_db:
                     cve_db[cve_id] = cve_patch
 
-            print('merging cve patches...')
+            log.notice('merging cve patches...')
             with tempfile.NamedTemporaryFile(dir='/tmp/', delete=False) as portage_tmpdir:
-                print('portage_tmpdir: '+portage_tmpdir.name)
+                log.notice('portage_tmpdir: '+portage_tmpdir.name)
                 for cve_id, cve_file in cve_patch_list:
                     with open(cve_file,'rb+') as infile:
                         portage_tmpdir.write(infile.read())
                 livepatch(config.url, config.kernel_version, config.config, portage_tmpdir.name, applied_patches_list)
 
-            print(new_cve_patch_list)
+            log.notice(new_cve_patch_list)
         elif config.patch:
             patch_manager = patch.ManaGer()
             applied_patches_list = patch_manager.list(config.kernel_version)
-            print(applied_patches_list)
+            log.notice(str(applied_patches_list))
             livepatch(config.url, config.kernel_version, config.config, config.patch, applied_patches_list)
 
         elif config.version:
-            print('elivepatch version: '+str(VERSION))
+            log.notice('elivepatch version: '+str(VERSION))
         else:
             print('--help for help\n\
 you need at list --patch or --cve')

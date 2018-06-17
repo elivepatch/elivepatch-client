@@ -7,8 +7,9 @@
 import requests
 import os
 import shutil
-from elivepatch_client import patch
 import tempfile
+from elivepatch_client import patch
+from elivepatch_client import log
 import sys
 from io import BytesIO
 
@@ -42,7 +43,7 @@ class ManaGer(object):
         """
         url = self.server_url + '/elivepatch/api/v1.0/agent'
         r = requests.get(url)
-        print(r.json())
+        log.notice(r.json())
 
     def send_files(self, temporary_config, new_patch_fullpath, incremental_patches, api):
         """
@@ -66,7 +67,7 @@ class ManaGer(object):
         # Static patch and config filename
         files=[]
         counter = 0
-        print('incremental_patches: '+str(incremental_patches))
+        log.notice('incremental_patches: '+str(incremental_patches))
         for incremental_patch_fullpath in incremental_patches:
             if incremental_patch_fullpath.endswith('.patch'):
                 # TODO: we need to close what we open
@@ -75,13 +76,13 @@ class ManaGer(object):
                 counter += 1
         files.append(('main_patch', ('main.patch', open(new_patch_fullpath, 'rb'), 'multipart/form-data', {'Expires': '0'})))
         files.append(('config', ('config', open(temporary_config.name, 'rb'), 'multipart/form-data', {'Expires': '0'})))
-        print(str(files))
+        log.notice(str(files))
         try:
             response = requests.post(url, files=files, headers=headers)
-            print('send file: ' + str(response.json()))
+            log.notice('send file: ' + str(response.json()))
             response_dict = response.json()
         except requests.exceptions.ConnectionError as e:
-            print('connection error: %s' % e)
+            log.notice('connection error: %s' % e)
             temporary_config.close()
         except:
             self._catching_exceptions_exit(self.send_files)
@@ -107,9 +108,9 @@ class ManaGer(object):
                     with open('myfile.ko', 'wb') as out:
                         out.write(r.content)
                     r.close()
-                    print(b)
+                    log.notice(b)
                 except:
-                    print('livepatch not found')
+                    log.notice('livepatch not found')
                     r.close()
         except:
             self._catching_exceptions_exit(self.get_livepatch)
@@ -120,12 +121,12 @@ class ManaGer(object):
                 if not os.path.exists(elivepatch_uuid_dir):
                     os.makedirs(elivepatch_uuid_dir)
                 shutil.copy("myfile.ko", livepatch_fulldir)
-                print('livepatch saved in ' + elivepatch_uuid_dir + '/ folder')
+                log.notice('livepatch saved in ' + elivepatch_uuid_dir + '/ folder')
                 patch_manager.load(patch_folder, livepatch_fulldir)
             else:
-                print('livepatch not received')
+                log.notice('livepatch not received')
 
     def _catching_exceptions_exit(self, current_function):
         e = sys.exc_info()
-        print( "Error %s: %s" % (current_function.__name__, str(e)) )
+        log.error( "Error %s: %s" % (current_function.__name__, str(e)) )
         sys.exit(1)

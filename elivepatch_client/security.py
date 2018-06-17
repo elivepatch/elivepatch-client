@@ -1,6 +1,7 @@
 import git
 import os
 import urllib.request as request
+from elivepatch_client import log
 import shutil
 
 
@@ -42,7 +43,7 @@ class CVE(object):
                     security_versions.append(security_versions_tmp.split('.')[2])
         security_file.close()
 
-        print('[debug] security versions: ' + str(security_versions))
+        log.notice('[debug] security versions: ' + str(security_versions))
 
         cve_2d_list = []
         for version in security_versions:
