@@ -2,6 +2,7 @@ import os
 import shutil
 import tempfile
 import subprocess
+from elivepatch_client import log
 
 
 class ManaGer(object):
@@ -36,9 +37,9 @@ class ManaGer(object):
                 if filenames and not dirnames:
                     for filename in filenames:
                         if filename.endswith('.patch'):
-                            print('dirpath: '+str(dirpath),'filename: '+str(filename))
+                            log.notice('dirpath: '+str(dirpath),'filename: '+str(filename))
                             incremental_patch_fullpath = os.path.join(dirpath, filename)
-                            print(incremental_patch_fullpath)
+                            log.notice(incremental_patch_fullpath)
                             patch_filename.append(incremental_patch_fullpath)
         # os.walk() walks in random order, perform a lexical sort
         patch_filename.sort()
@@ -48,9 +49,9 @@ class ManaGer(object):
             if filenames and not dirnames:
                 for filename in filenames:
                     if filename.endswith('.patch'):
-                        print('dirpath: '+str(dirpath),'filename: '+str(filename))
+                        log.notice(str('dirpath: '+str(dirpath) + 'filename: '+str(filename)))
                         incremental_patch_fullpath = os.path.join(dirpath, filename)
-                        print(incremental_patch_fullpath)
+                        log.notice(incremental_patch_fullpath)
                         previous_patches.append(incremental_patch_fullpath)
         # os.walk() walks in random order, perform a lexical sort
         previous_patches = sorted(previous_patches, key=lambda elive: int(elive.replace('/elivepatch.patch','').split('_')[1]))
@@ -58,7 +59,7 @@ class ManaGer(object):
         # Append the previous patches to the eapply_user patches list
         patch_filename.extend(previous_patches)
 
-        print('List of current patches:')
+        log.notice('List of current patches:')
         return patch_filename
 
     def load(self, patch_fulldir, livepatch_fulldir):
@@ -69,10 +70,10 @@ class ManaGer(object):
         """
         try:
             _command(['sudo', 'kpatch', 'load', livepatch_fulldir])
-            print('patch_fulldir:' + str(patch_fulldir) + ' livepatch_fulldir: '+ str(livepatch_fulldir))
+            log.notice('patch_fulldir:' + str(patch_fulldir) + ' livepatch_fulldir: '+ str(livepatch_fulldir))
             self._save(patch_fulldir, livepatch_fulldir)
         except:
-            print('failed to load the livepatch')
+            log.notice('failed to load the livepatch')
 
     def _save(self, patch_fulldir, livepatch_fulldir):
         """
@@ -107,12 +108,12 @@ def _command(bashCommand, kernel_source_dir=None, env=None):
         env = process_env
 
     if kernel_source_dir:
-        print(bashCommand)
+        log.notice(bashCommand)
         process = subprocess.Popen(bashCommand, stdout=subprocess.PIPE,  cwd=kernel_source_dir, env=env)
         output, error = process.communicate()
-        print(output)
+        log.notice(output)
     else:
-        print(bashCommand)
+        log.notice(bashCommand)
         process = subprocess.Popen(bashCommand, stdout=subprocess.PIPE, env=env)
         output, error = process.communicate()
-        print(output)
+        log.notice(output)

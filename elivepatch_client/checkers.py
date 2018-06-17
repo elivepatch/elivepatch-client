@@ -13,6 +13,7 @@ import os.path
 import re
 
 from elivepatch_client import restful
+from elivepatch_client import log
 
 
 def id_generate_uuid():
@@ -33,7 +34,7 @@ class Kernel(object):
             self.session_uuid = session_uuid
         else:
             self.session_uuid = id_generate_uuid()
-        print('This session uuid: ' + str(self.session_uuid))
+        log.notice('This session uuid: ' + str(self.session_uuid))
         self.rest_manager = restful.ManaGer(self.restserver_url, self.kernel_version, self.session_uuid)
 
     def set_config(self, config_fullpath):
@@ -53,7 +54,7 @@ class Kernel(object):
         # check the configuration file
         # TODO: make it more compact
         if re.findall("[.]gz\Z", self.config_fullpath):
-            print('gz extension')
+            log.notice('gz extension')
             # uncompress the gzip config file
             # return configuration temporary folder
             temporary_config = f_action.decompress_gz(temporary_config)
@@ -66,7 +67,7 @@ class Kernel(object):
         # Get kernel version from the configuration file header
         # self.kernel_version = f_action.config_kernel_version(temporary_config)
         self.rest_manager.set_kernel_version(self.kernel_version)
-        print('debug: kernel version = ' + self.rest_manager.get_kernel_version())
+        log.notice('debug: kernel version = ' + self.rest_manager.get_kernel_version())
 
         send_api = '/elivepatch/api/v1.0/get_files'
 
@@ -91,7 +92,7 @@ class FileAction(object):
         :return: Uncompressed configuration file path
         """
         path_gz_file = self.full_path
-        print('path_gz_file: '+ path_gz_file + ' temporary_path_uncompressed_file: ' +
+        log.notice('path_gz_file: '+ path_gz_file + ' temporary_path_uncompressed_file: ' +
               temporary.name)
         if os.path.isfile(path_gz_file):
             with gzip.open(path_gz_file, 'rb') as in_file:
