@@ -19,6 +19,8 @@
   * Client to be run on the machine where we want to install the live patch.
 * [elivepatch-server](https://github.com/gentoo/elivepatch-server)
   * RESTful API to be run on the server using kpatch for building the live patch.
+* [elivepatch-overlay](https://github.com/aliceinwire/elivepatch-overlay)
+  * Where to keep you patches.
 
 # User's guide
 
