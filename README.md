@@ -115,6 +115,9 @@ Not all patch can be converted to live patch using kpatch.
 
 # Developer's guide
 
+## Creating elivepatch-overlay
+[elivepatch overlay example](https://github.com/aliceinwire/elivepatch-overlay)
+
 ## Contributing
 
 Fork this repo and make a pull request. We are happy to merge it.
