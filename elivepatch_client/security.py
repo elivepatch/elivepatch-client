@@ -35,7 +35,8 @@ class CVE(object):
             if "CVEs fixed in" in line:
                 security_versions_tmp = line.strip().split(' ')[3][:-1]
                 # if there is not revision, set revision as 0
-                if len(security_versions_tmp) == 3:
+                sv_split_tmp = security_versions_tmp.split('.')
+                if len(sv_split_tmp) == 2:
                     security_versions.append(0)
                 else:
                     security_versions.append(security_versions_tmp.split('.')[2])
