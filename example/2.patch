@@ -1,0 +1,11 @@
+--- src.org/fs/proc/meminfo.c.orig	2018-10-31 12:00:49.100000000 +0000
++++ src/fs/proc/meminfo.c	2018-10-31 12:01:42.370000000 +0000
+@@ -121,7 +121,7 @@ static int meminfo_proc_show(struct seq_
+ 	seq_printf(m, "VmallocTotal:   %8lu kB\n",
+ 		   (unsigned long)VMALLOC_TOTAL >> 10);
+ 	show_val_kb(m, "VmallocUsed:    ", 0ul);
+-	show_val_kb(m, "VmallocChunk:   ", 0ul);
++	show_val_kb(m, "VMALLOCCHUNK:   ", 0ul);
+ 	show_val_kb(m, "Percpu:         ", pcpu_nr_pages());
+ 
+ #ifdef CONFIG_MEMORY_FAILURE
