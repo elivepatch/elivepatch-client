@@ -26,6 +26,8 @@ setup(
     author='Alice Ferrazzi',
     author_email='alice.ferrazzi@gmail.com',
     license='GNU GPLv2+',
-    packages=['elivepatch_client'],
-    scripts=['bin/elivepatch'],
+    packages=find_packages("src"),
+    package_dir={"": "src"},
+    install_requires=["GitPython", "requests"],
+    entry_points={"console_scripts": ["elivepatch-client = elivepatch_client.__main__:main"]},
 )
