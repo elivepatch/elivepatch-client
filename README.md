@@ -1,5 +1,8 @@
 # elivepatch-client
+[![Maintainability](https://api.codeclimate.com/v1/badges/67c1cd220ba85837d96f/maintainability)](https://codeclimate.com/github/gentoo/elivepatch-client/maintainability)
+
 Flexible Distributed Linux Kernel Live Patching
+
 
 ## Features
 
