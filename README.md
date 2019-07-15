@@ -1,6 +1,7 @@
-# elivepatch - Flexible Distributed Linux Kernel Live Patching
+# elivepatch-client
+Flexible Distributed Linux Kernel Live Patching
 
-# Why?
+## Features
 
 * 3rd-party trust.
   * Trust on a third-party service can be eliminated by deploying Elivepatch in-house.
@@ -13,96 +14,23 @@
 * Security auditing.
   * Elivepatch is completely open source and thus fully auditable. 
 
-# How?
-
-* [elivepatch-client](https://github.com/gentoo/elivepatch-client)
-  * Client to be run on the machine where we want to install the live patch.
-* [elivepatch-server](https://github.com/gentoo/elivepatch-server)
-  * RESTful API to be run on the server using kpatch for building the live patch.
-* [elivepatch-overlay](https://github.com/aliceinwire/elivepatch-overlay)
-  * Where to keep you patches.
-
 # User's guide
 
-## Installing
-
-### On Gentoo based distros:
-
-#### client install
-
-    emerge --ask sys-kernel/kpatch
-    emerge --ask sys-apps/elivepatch-client
-
-#### server install
-
-    emerge --ask sys-kernel/kpatch
-    emerge --ask sys-apps/elivepatch-server
-
-### on Debian based distros:
-
-#### client install
+### Installing from source
 
 ```
-apt-get install git
-apt-get install python3-pip
-
-git clone  https://github.com/gentoo/elivepatch-client
-cd elivepatch-client
-pip3 install -r requirements.txt
-PYTHONPATH=. python3 bin/elivepatch
+$ git clone https://github.com/gentoo/elivepatch-client
+$ cd elivepatch-client/
+$ virtualenv .venv
+$ python setup.py install
 ```
 
-
-### Install from source
-#### client install
+### Example usage
 
 ```
-git clone  https://github.com/gentoo/elivepatch-client
-cd elivepatch-client
-pip3 install -r requirements.txt
-PYTHONPATH=. python3 bin/elivepatch
+elivepatch-client -p example/2.patch -k example/config_5.1.6  -a 5.1.6 --url http://localhost:5000
 ```
-#### server install
 
-```
-git clone  https://github.com/gentoo/elivepatch-server
-cd elivepatch-server
-pip3 install -r requirements.txt
-PYTHONPATH=. python3 elivepatch_server/elivepatch-server
-```
-## Usage
-
-### Use
-
-#### Server start
-
-    PYTHONPATH=. python3 elivepatch_server/elivepatch-server
-
-#### Client start
-
-    PYTHONPATH=. python3 bin/elivepatch
-
-```
-usage: elivepatch [-h] [-c FILE] [-e] [-p PATCH] [-k CONFIG]
-                  [-a KERNEL_VERSION] [-l] [-u URL] [-d] [-v]
-
-optional arguments:
-  -h, --help            show this help message and exit
-  -c FILE, --conf_file FILE
-                        Specify config file
-  -e, --cve             Check for secutiry problems in the kernel.
-  -p PATCH, --patch PATCH
-                        patch to convert.
-  -k CONFIG, --config CONFIG
-                        set kernel config file manually.
-  -a KERNEL_VERSION, --kernel_version KERNEL_VERSION
-                        set kernel version manually.
-  -l, --clear           Clear the already installed cve db (Use with
-                        caution!).
-  -u URL, --url URL     set elivepatch server url.
-  -d, --debug           set the debug option.
-  -v, --version         show the version.
-```
 ### Creating Live patch
 Not all patch can be converted to live patch using kpatch.
 * [Patch that change data structure](https://github.com/dynup/kpatch/blob/master/doc/patch-author-guide.md#change-the-code-which-uses-the-data-structure)
@@ -114,11 +42,18 @@ Not all patch can be converted to live patch using kpatch.
 * [Removing references to static local variables](https://github.com/dynup/kpatch/blob/master/doc/patch-author-guide.md#removing-references-to-static-local-variables)
 * [Code removal](https://github.com/dynup/kpatch/blob/master/doc/patch-author-guide.md#code-removal)
 
+## Repository
+
+* [elivepatch-client](https://github.com/gentoo/elivepatch-client)
+  * Client to be run on the machine where we want to install the live patch.
+* [elivepatch-server](https://github.com/gentoo/elivepatch-server)
+  * RESTful API to be run on the server using kpatch for building the live patch.
+* [elivepatch-overlay](https://github.com/elivepatch/livepatch-overlay)
+  * Where to keep your livepatch patches.
+* [elivepatch-docker](https://github.com/elivepatch/elivepatch-docker)
+  * Simplyfing elivepatch-server start.
 
 # Developer's guide
-
-## Creating elivepatch-overlay
-[elivepatch overlay example](https://github.com/aliceinwire/elivepatch-overlay)
 
 ## Contributing
 
