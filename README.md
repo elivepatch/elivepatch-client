@@ -14,7 +14,7 @@ Flexible Distributed Linux Kernel Live Patching
 * Security auditing.
   * Elivepatch is completely open source and thus fully auditable. 
 
-# User's guide
+## User's guide
 
 ### Installing from source
 
@@ -53,9 +53,9 @@ Not all patch can be converted to live patch using kpatch.
 * [elivepatch-docker](https://github.com/elivepatch/elivepatch-docker)
   * Simplyfing elivepatch-server start.
 
-# Developer's guide
+## Developer's guide
 
-## Contributing
+### Contributing
 
 Fork this repo and make a pull request. We are happy to merge it.
 
@@ -73,7 +73,7 @@ If you have push access to this repo it is a good idea to still create a pull re
 so at least one more person have reviewed your code.
 Exceptions are trivial changes and urgent changes (that fix something completely broken).
 
-## Communication
+### Communication
 
  - Join #gentoo-kernel channel on Freenode
  - Open issues [here](https://github.com/gentoo/elivepatch-client/issues)
