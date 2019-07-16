@@ -1,0 +1,15 @@
+services:
+    - docker
+before_install:
+  - docker pull alice2f/elivepatch-server:latest
+  - docker run -d --name elivepatch-server -p 5000:5000 alice2f/elivepatch-server
+  - docker ps -a
+language: python
+sudo: required
+python:
+    - '3.6'
+cache: pip
+script:
+    - python setup.py install
+    - elivepatch-client -p example/2.patch -k example/config_5.1.6  -a 5.1.6 --url http://localhost:5000 &
+    - docker logs elivepatch-server
